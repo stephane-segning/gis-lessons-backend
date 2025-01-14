@@ -1,0 +1,24 @@
+config:
+  target: 'http://app:3000'
+  phases:
+    - duration: 60
+      arrivalRate: 100000
+scenarios:
+  - name: 'Say hello!'
+    flow:
+      - get:
+          url: '/'
+          expect:
+            - statusCode: 200
+  - name: 'Check health'
+    flow:
+      - get:
+          url: '/health'
+          expect:
+            - statusCode: 200
+  - name: 'Get todos'
+    flow:
+      - post:
+          url: '/api/todos'
+          expect:
+            - statusCode: 200

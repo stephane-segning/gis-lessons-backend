@@ -1,0 +1,37 @@
+[package]
+name = "backend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+opentelemetry = { version = "0" }
+opentelemetry-otlp = { version = "0", features = ["tokio", "metrics", "trace", "tracing"] }
+opentelemetry_sdk = { version = "0", features = ["tokio", "metrics", "rt-tokio", "trace", "tracing"] }
+opentelemetry-prometheus = { version = "0.27.0" }
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "fmt"] }
+tracing-opentelemetry = "0.28.0"
+tracing = { version = "0" }
+prometheus = { version = "0" }
+
+axum = { version = "0.7.9", features = ["tracing", "tokio", "macros"] }
+axum-extra = { version = "0.9", features = ["cookie", "multipart"] }
+axum-otel-metrics = { version = "0.9.1" }
+axum-tracing-opentelemetry = { version = "0.25.0" }
+tower-http = { version = "0.6", features = ["compression-full", "cors"] }
+
+tokio = { version = "1", features = ["full"] }
+
+diesel = { version = "2", features = ["postgres", "postgres_backend", "chrono", "serde_json", "time"] }
+diesel-async = { version = "0", features = ["postgres", "deadpool", "async-connection-wrapper", "sync-connection-wrapper"] }
+diesel_migrations = { version = "2", features = ["postgres"] }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["raw_value"] }
+serde_cbor = { version = "0" }
+
+envconfig = { version = "0" }
+derive_builder = { version = "0" }
+anyhow = { version = "1" }
+
+gen-server = { path = "./packages/gen-server", features = ["conversion"] }
+cuid2 = { version = "0" }
