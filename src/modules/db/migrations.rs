@@ -1,3 +1,4 @@
+use crate::modules::utils::err::app_panic;
 use anyhow::Result;
 use diesel::Connection;
 use diesel_async::async_connection_wrapper::AsyncConnectionWrapper;
@@ -10,9 +11,9 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 pub async fn run_migrations(database_url: String) -> Result<()> {
     tokio::task::spawn_blocking(move || {
         let mut conn = AsyncConnectionWrapper::<AsyncPgConnection>::establish(&database_url)
-            .expect("Failed to establish connection");
+            .unwrap_or_else(|_| app_panic(format!("Failed to connect to '{}'", database_url)));
         conn.run_pending_migrations(MIGRATIONS)
-            .expect("Failed to run migrations");
+            .unwrap_or_else(|_| app_panic("Failed to run migrations"));
     })
     .await?;
     Ok(())
