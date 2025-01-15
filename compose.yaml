@@ -87,18 +87,15 @@ services:
     image: openapitools/openapi-generator-cli
     volumes:
       - ./packages:/packages
-      - ./openapi.yaml:/openapi.yaml:ro
     command:
       - generate
       - -i
-      - /openapi.yaml
+      - /packages/link-frontend/openapi.yaml
       - -g
       - rust-axum
       - -o
       - /packages/gen-server
       - --package-name
       - gen-server
-      - --additional-properties
-      - disableValidator=true
 volumes:
   db: { }

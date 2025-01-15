@@ -1,0 +1,4 @@
+[submodule "packages/link-frontend"]
+	path = packages/link-frontend
+	url = https://github.com/stephane-segning/gis-lessons-web.git
+	branch = feat/separate-backend

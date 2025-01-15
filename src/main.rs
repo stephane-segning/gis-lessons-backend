@@ -1,3 +1,4 @@
+use crate::modules::api::handler::ApiServiceBuilder;
 use crate::modules::db::connection::get_connection;
 use crate::modules::env::env::EnvConfig;
 use crate::modules::router::router::router;
@@ -11,7 +12,6 @@ use tracing::{debug, warn};
 mod domain;
 mod modules;
 mod services;
-mod api;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -26,9 +26,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listener = TcpListener::bind(addr).await?;
     debug!(config.http_port, config.http_host, "Will start");
 
+    let api_service = ApiServiceBuilder::default().pool(db_pool).build()?;
+    let app = router(metrics, api_service).await?;
+
     // Start the server
     warn!("Server running on http://{:?}", listener.local_addr()?);
-    let app = router(metrics, db_pool).await?;
     axum::serve(listener, app).await?;
 
     // Shutdown the tracer provider
