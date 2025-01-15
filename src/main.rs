@@ -3,6 +3,8 @@ use crate::modules::db::connection::get_connection;
 use crate::modules::env::env::EnvConfig;
 use crate::modules::router::router::router;
 use crate::modules::tracer::init::init_tracing;
+use crate::services::activities::handler::ActivityServiceBuilder;
+use crate::services::courses::handler::CourseServiceBuilder;
 use envconfig::Envconfig;
 use opentelemetry::global;
 use std::net::SocketAddr;
@@ -26,7 +28,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listener = TcpListener::bind(addr).await?;
     debug!(config.http_port, config.http_host, "Will start");
 
-    let api_service = ApiServiceBuilder::default().pool(db_pool).build()?;
+    let activity_service = ActivityServiceBuilder::default()
+        .pool(db_pool.clone())
+        .build()?;
+    let course_service = CourseServiceBuilder::default().pool(db_pool).build()?;
+
+    let api_service = ApiServiceBuilder::default()
+        .activity_service(activity_service)
+        .course_service(course_service)
+        .build()?;
+
     let app = router(metrics, api_service).await?;
 
     // Start the server

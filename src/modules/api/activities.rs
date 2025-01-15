@@ -13,8 +13,14 @@ impl Activities for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: GetSubmissionActivitiesQueryParams,
+        query_params: GetSubmissionActivitiesQueryParams,
     ) -> Result<GetSubmissionActivitiesResponse, ()> {
-        todo!()
+        let page = self
+            .activity_service
+            .find_activities(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find activities");
+
+        Ok(GetSubmissionActivitiesResponse::Status200_TheRequestedSubmission(page))
     }
 }

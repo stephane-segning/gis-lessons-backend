@@ -11,7 +11,7 @@ COPY ./ ./
 
 RUN cargo build --release
 
-FROM debian as dep
+FROM debian:12 as dep
 
 RUN apt-get update && apt-get install -y libpq5
 
@@ -37,7 +37,7 @@ RUN mkdir /deps && \
   cp /usr/lib/*-linux-gnu/libldap-*.so* /deps && \
   cp /usr/lib/*-linux-gnu/libgcc_s.so* /deps
 
-FROM gcr.io/distroless/base-debian12
+FROM gcr.io/distroless/base-debian12:nonroot
 
 LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
 LABEL org.opencontainers.image.description="UI Frontend for Vymalo Projects"

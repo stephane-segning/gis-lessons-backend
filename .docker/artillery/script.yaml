@@ -2,23 +2,29 @@ config:
   target: 'http://app:3000'
   phases:
     - duration: 60
-      arrivalRate: 100000
+      arrivalRate: 1000
 scenarios:
-  - name: 'Say hello!'
+  - name: 'Create course!'
+    flow:
+      - post:
+          url: '/courses'
+          json:
+            name: 'Course {{ $randomNumber(1,10000) }}'
+            slug: 'some-course-{{ $randomString() }}'
+            meta:
+              'miaou-{{ $randomString() }}': 'Cat {{ $randomString() }}'
+              '{{ $randomNumber(1,10000) }}': {{ $randomNumber(1,10000) }}
+          expect:
+            - statusCode: 201
+  - name: 'Get courses'
     flow:
       - get:
-          url: '/'
+          url: '/courses'
           expect:
             - statusCode: 200
   - name: 'Check health'
     flow:
       - get:
           url: '/health'
-          expect:
-            - statusCode: 200
-  - name: 'Get todos'
-    flow:
-      - post:
-          url: '/api/todos'
           expect:
             - statusCode: 200

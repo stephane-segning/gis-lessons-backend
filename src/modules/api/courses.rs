@@ -21,7 +21,15 @@ impl Courses for ApiService {
         _cookies: CookieJar,
         _body: CourseCreate,
     ) -> Result<CreateCourseResponse, ()> {
-        todo!()
+        let res = self
+            .course_service
+            .create_course(_body)
+            .await
+            .expect("Failed to create course");
+
+        Ok(CreateCourseResponse::Status201_CourseCreatedSuccessfully(
+            res,
+        ))
     }
 
     async fn delete_course(
@@ -31,7 +39,12 @@ impl Courses for ApiService {
         _cookies: CookieJar,
         _path_params: DeleteCoursePathParams,
     ) -> Result<DeleteCourseResponse, ()> {
-        todo!()
+        self.course_service
+            .delete_course(_path_params.course_id)
+            .await
+            .expect("Failed to delete course");
+
+        Ok(DeleteCourseResponse::Status204_CourseDeletedSuccessfully)
     }
 
     async fn get_course(
@@ -41,7 +54,13 @@ impl Courses for ApiService {
         _cookies: CookieJar,
         _path_params: GetCoursePathParams,
     ) -> Result<GetCourseResponse, ()> {
-        todo!()
+        let res = self
+            .course_service
+            .get_course(_path_params.course_id)
+            .await
+            .expect("Failed to get course");
+
+        Ok(GetCourseResponse::Status200_TheRequestedCourse(res))
     }
 
     async fn list_courses(
@@ -49,9 +68,15 @@ impl Courses for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: ListCoursesQueryParams,
+        query_params: ListCoursesQueryParams,
     ) -> Result<ListCoursesResponse, ()> {
-        todo!()
+        let res = self
+            .course_service
+            .find_course(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find course");
+
+        Ok(ListCoursesResponse::Status200_AListOfCourses(res))
     }
 
     async fn update_course(
@@ -62,6 +87,14 @@ impl Courses for ApiService {
         _path_params: UpdateCoursePathParams,
         _body: CourseUpdate,
     ) -> Result<UpdateCourseResponse, ()> {
-        todo!()
+        let res = self
+            .course_service
+            .update_course(_path_params.course_id, _body)
+            .await
+            .expect("Failed to update course");
+
+        Ok(UpdateCourseResponse::Status200_CourseUpdatedSuccessfully(
+            res,
+        ))
     }
 }

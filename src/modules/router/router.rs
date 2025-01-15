@@ -1,6 +1,6 @@
 use crate::modules::api::handler::ApiService;
 use crate::modules::router::middlewares::apply_common_middlewares;
-use crate::services::health::health::health;
+use crate::services::health::handler::health;
 use crate::services::metrics::handler::metrics_handler;
 use anyhow::Result;
 use axum::routing::get;

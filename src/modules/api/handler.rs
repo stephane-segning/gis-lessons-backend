@@ -1,10 +1,11 @@
+use crate::services::activities::handler::ActivityService;
+use crate::services::courses::handler::CourseService;
 use derive_builder::Builder;
-use diesel_async::pooled_connection::deadpool::Pool;
-use diesel_async::AsyncPgConnection;
 
 #[derive(Clone, Builder)]
 pub struct ApiService {
-    pub pool: Pool<AsyncPgConnection>,
+    pub activity_service: ActivityService,
+    pub course_service: CourseService,
 }
 
 impl AsRef<ApiService> for ApiService {
