@@ -16,51 +16,51 @@ use gen_server::models::{
 impl Instructors for ApiService {
     async fn create_instructor(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        body: InstructorCreate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _body: InstructorCreate,
     ) -> Result<CreateInstructorResponse, ()> {
         todo!()
     }
 
     async fn delete_instructor(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: DeleteInstructorPathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: DeleteInstructorPathParams,
     ) -> Result<DeleteInstructorResponse, ()> {
         todo!()
     }
 
     async fn get_instructor(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: GetInstructorPathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: GetInstructorPathParams,
     ) -> Result<GetInstructorResponse, ()> {
         todo!()
     }
 
     async fn list_instructors(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        query_params: ListInstructorsQueryParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _query_params: ListInstructorsQueryParams,
     ) -> Result<ListInstructorsResponse, ()> {
         todo!()
     }
 
     async fn update_instructor(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: UpdateInstructorPathParams,
-        body: InstructorUpdate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: UpdateInstructorPathParams,
+        _body: InstructorUpdate,
     ) -> Result<UpdateInstructorResponse, ()> {
         todo!()
     }

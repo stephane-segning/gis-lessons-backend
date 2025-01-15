@@ -4,7 +4,7 @@ use diesel_async::AsyncPgConnection;
 
 #[derive(Clone, Builder)]
 pub struct ApiService {
-    pool: Pool<AsyncPgConnection>,
+    pub pool: Pool<AsyncPgConnection>,
 }
 
 impl AsRef<ApiService> for ApiService {

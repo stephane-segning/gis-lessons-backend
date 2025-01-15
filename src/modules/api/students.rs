@@ -8,59 +8,59 @@ use gen_server::apis::students::{
     Students, UpdateStudentResponse,
 };
 use gen_server::models::{
-    DeleteStudentPathParams, GetStudentPathParams,
-    ListStudentsQueryParams, StudentCreate, StudentUpdate, UpdateStudentPathParams,
+    DeleteStudentPathParams, GetStudentPathParams, ListStudentsQueryParams, StudentCreate,
+    StudentUpdate, UpdateStudentPathParams,
 };
 
 #[async_trait]
 impl Students for ApiService {
     async fn create_student(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        body: StudentCreate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _body: StudentCreate,
     ) -> Result<CreateStudentResponse, ()> {
         todo!()
     }
 
     async fn delete_student(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: DeleteStudentPathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: DeleteStudentPathParams,
     ) -> Result<DeleteStudentResponse, ()> {
         todo!()
     }
 
     async fn get_student(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: GetStudentPathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: GetStudentPathParams,
     ) -> Result<GetStudentResponse, ()> {
         todo!()
     }
 
     async fn list_students(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        query_params: ListStudentsQueryParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _query_params: ListStudentsQueryParams,
     ) -> Result<ListStudentsResponse, ()> {
         todo!()
     }
 
     async fn update_student(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: UpdateStudentPathParams,
-        body: StudentUpdate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: UpdateStudentPathParams,
+        _body: StudentUpdate,
     ) -> Result<UpdateStudentResponse, ()> {
         todo!()
     }

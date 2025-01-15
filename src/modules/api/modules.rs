@@ -16,51 +16,51 @@ use gen_server::models::{
 impl Modules for ApiService {
     async fn create_module(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        body: ModuleCreate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _body: ModuleCreate,
     ) -> Result<CreateModuleResponse, ()> {
         todo!()
     }
 
     async fn delete_module(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: DeleteModulePathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: DeleteModulePathParams,
     ) -> Result<DeleteModuleResponse, ()> {
         todo!()
     }
 
     async fn get_module(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: GetModulePathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: GetModulePathParams,
     ) -> Result<GetModuleResponse, ()> {
         todo!()
     }
 
     async fn list_modules(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        query_params: ListModulesQueryParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _query_params: ListModulesQueryParams,
     ) -> Result<ListModulesResponse, ()> {
         todo!()
     }
 
     async fn update_module(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: UpdateModulePathParams,
-        body: ModuleUpdate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: UpdateModulePathParams,
+        _body: ModuleUpdate,
     ) -> Result<UpdateModuleResponse, ()> {
         todo!()
     }

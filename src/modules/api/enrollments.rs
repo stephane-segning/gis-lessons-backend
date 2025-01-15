@@ -16,51 +16,51 @@ use gen_server::models::{
 impl Enrollments for ApiService {
     async fn create_enrollment(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        body: EnrollmentCreate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _body: EnrollmentCreate,
     ) -> Result<CreateEnrollmentResponse, ()> {
         todo!()
     }
 
     async fn delete_enrollment(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: DeleteEnrollmentPathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: DeleteEnrollmentPathParams,
     ) -> Result<DeleteEnrollmentResponse, ()> {
         todo!()
     }
 
     async fn get_enrollment(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: GetEnrollmentPathParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: GetEnrollmentPathParams,
     ) -> Result<GetEnrollmentResponse, ()> {
         todo!()
     }
 
     async fn list_enrollments(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        query_params: ListEnrollmentsQueryParams,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _query_params: ListEnrollmentsQueryParams,
     ) -> Result<ListEnrollmentsResponse, ()> {
         todo!()
     }
 
     async fn update_enrollment(
         &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: UpdateEnrollmentPathParams,
-        body: EnrollmentUpdate,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        _path_params: UpdateEnrollmentPathParams,
+        _body: EnrollmentUpdate,
     ) -> Result<UpdateEnrollmentResponse, ()> {
         todo!()
     }
