@@ -5,5 +5,8 @@ target
 .dockerignore
 .env
 .gitignore
+.gitmodules
 compose.yaml
 Dockerfile
+Makefile
+README.md

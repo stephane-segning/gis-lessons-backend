@@ -8,9 +8,8 @@ use gen_server::apis::lessons::{
     Lessons, ListLessonResponse, UpdateLessonResponse,
 };
 use gen_server::models::{
-    DeleteLessonPathParams, GetLessonBlocksPathParams, GetLessonPathParams
-    , LessonCreate, LessonUpdate, ListLessonPathParams,
-    ListLessonQueryParams, UpdateLessonPathParams,
+    DeleteLessonPathParams, GetLessonBlocksPathParams, GetLessonPathParams, LessonCreate,
+    LessonUpdate, ListLessonQueryParams, UpdateLessonPathParams,
 };
 
 #[async_trait]
@@ -60,7 +59,6 @@ impl Lessons for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: ListLessonPathParams,
         _query_params: ListLessonQueryParams,
     ) -> Result<ListLessonResponse, ()> {
         todo!()

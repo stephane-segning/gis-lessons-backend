@@ -3,6 +3,7 @@ use crate::modules::router::middlewares::apply_common_middlewares;
 use crate::services::health::handler::health;
 use crate::services::metrics::handler::metrics_handler;
 use anyhow::Result;
+use axum::response::Redirect;
 use axum::routing::get;
 use axum::Router;
 use axum_otel_metrics::HttpMetricsLayer;
@@ -18,6 +19,7 @@ pub async fn router(metrics: HttpMetricsLayer, api_service: ApiService) -> Resul
 
     // Add health and metrics endpoints
     let app = app
+        .route("/", get(|| async { Redirect::permanent("/health") }))
         .route("/health", get(health))
         .route("/metrics", get(metrics_handler));
 

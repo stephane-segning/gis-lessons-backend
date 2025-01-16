@@ -1,8 +1,8 @@
 config:
   target: 'http://app:3000'
   phases:
-    - duration: 60
-      arrivalRate: 1000
+    - duration: 120
+      arrivalRate: 2000
 scenarios:
   - name: 'Create course!'
     flow:
@@ -28,3 +28,9 @@ scenarios:
           url: '/health'
           expect:
             - statusCode: 200
+  - name: 'Permanent redirect'
+    flow:
+      - get:
+          url: '/'
+          expect:
+            - statusCode: 301
