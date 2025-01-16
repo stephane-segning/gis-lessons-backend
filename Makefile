@@ -46,3 +46,6 @@ ps: 				## Show status
 
 stats: 				## Show stats
 	docker compose -p sschool -f compose.yaml stats $(c)
+	
+git-pull:			## Git fetch link-frontend
+	git submodule update --remote packages/link-frontend
