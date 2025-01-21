@@ -23,7 +23,7 @@ impl Courses for ApiService {
     ) -> Result<CreateCourseResponse, ()> {
         let res = self
             .course_service
-            .create_course(_body)
+            .create_entity(_body)
             .await
             .expect("Failed to create course");
 
@@ -40,7 +40,7 @@ impl Courses for ApiService {
         _path_params: DeleteCoursePathParams,
     ) -> Result<DeleteCourseResponse, ()> {
         self.course_service
-            .delete_course(_path_params.course_id)
+            .delete_entity(_path_params.course_id)
             .await
             .expect("Failed to delete course");
 
@@ -56,7 +56,7 @@ impl Courses for ApiService {
     ) -> Result<GetCourseResponse, ()> {
         let res = self
             .course_service
-            .get_course(_path_params.course_id)
+            .get_entity(_path_params.course_id)
             .await
             .expect("Failed to get course");
 
@@ -72,7 +72,7 @@ impl Courses for ApiService {
     ) -> Result<ListCoursesResponse, ()> {
         let res = self
             .course_service
-            .find_course(query_params.limit, query_params.offset, query_params.q)
+            .find_entity(query_params.limit, query_params.offset, query_params.q)
             .await
             .expect("Failed to find course");
 
@@ -89,7 +89,7 @@ impl Courses for ApiService {
     ) -> Result<UpdateCourseResponse, ()> {
         let res = self
             .course_service
-            .update_course(_path_params.course_id, _body)
+            .update_entity(_path_params.course_id, _body)
             .await
             .expect("Failed to update course");
 

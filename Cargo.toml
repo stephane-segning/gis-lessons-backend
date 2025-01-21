@@ -34,3 +34,4 @@ anyhow = { version = "1" }
 
 gen-server = { path = "./packages/gen-server", features = ["conversion"] }
 cuid2 = { version = "0" }
+o2o = "0.5.3"
