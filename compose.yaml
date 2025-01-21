@@ -64,9 +64,9 @@ services:
       OTLP_SERVICE_NAME: giss
       OTLP_VERSION: 1.0.0-rc1
       LOG_LEVEL: ${LOG_LEVEL:-warn}
-      DB_MAX_THREAD_POOL: ${DB_MAX_THREAD_POOL:-5}
+      DB_MAX_THREAD_POOL: ${DB_MAX_THREAD_POOL:-10}
     ports:
-      - ${APP_PORT:-3000-3001}:3000
+      - ${APP_PORT:-3001-3005}:3000
     depends_on:
       - postgres
       - tracking
@@ -74,7 +74,7 @@ services:
       - postgres
 
   artillery:
-    image: artilleryio/artillery
+    image: artilleryio/artillery:2.0.21
     command:
       - "run"
       - "-o"
@@ -85,6 +85,16 @@ services:
       - .docker/tmp:/tmp/artillery
     depends_on:
       - app
+
+  artillery-report:
+    image: artilleryio/artillery:2.0.21
+    command:
+      - "report"
+      - "/tmp/artillery/test-run-report.json"
+    volumes:
+      - .docker/tmp:/tmp/artillery
+    depends_on:
+      - artillery
 
   openapi-generator-cli:
     image: openapitools/openapi-generator-cli

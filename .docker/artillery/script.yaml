@@ -7,7 +7,7 @@ scenarios:
   - name: 'Create course!'
     flow:
       - post:
-          url: '/courses'
+          url: '/api/courses'
           json:
             name: 'Course {{ $randomNumber(1,10000) }}'
             slug: 'some-course-{{ $randomString() }}'
@@ -19,7 +19,7 @@ scenarios:
   - name: 'Get courses'
     flow:
       - get:
-          url: '/courses'
+          url: '/api/courses'
           expect:
             - statusCode: 200
   - name: 'Check health'
@@ -33,4 +33,4 @@ scenarios:
       - get:
           url: '/'
           expect:
-            - statusCode: 301
+            - statusCode: 308
