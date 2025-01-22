@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: {{ .Values.controllers.myController.type }}
+metadata:
+  name: {{ include "my-app.fullname" . }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "my-app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.controllers.myController.replicas }}
+  selector:
+    matchLabels:
+      {{- include "my-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "my-app.labels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.defaultPodOptions.imagePullSecrets }}
+      {{- with .Values.defaultPodOptions.securityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.defaultPodOptions.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.controllers.myController.containers.app.image.repository }}:{{ .Values.controllers.myController.containers.app.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.controllers.myController.containers.app.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.app.ports.http.targetPort }}
+              protocol: TCP

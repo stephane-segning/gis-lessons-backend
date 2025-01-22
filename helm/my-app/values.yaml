@@ -1,0 +1,101 @@
+global:
+  nameOverride: my-app
+  fullnameOverride: my-full-app
+  namespace: my-namespace
+  labels:
+    app: my-app
+
+defaultPodOptions:
+  imagePullSecrets: my-image-pull-secrets
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+
+controllers:
+  myController:
+    type: Deployment
+    replicas: 1
+    containers:
+      app:
+        image:
+          repository: ghcr.io/stephane-segning/gis-lessons-backend
+          tag: latest
+          pullPolicy: IfNotPresent
+
+        # -- Environment variables, Helm templates can be used to dynamically set values
+        env:
+          - name: TZ
+            value: "UTC"
+          - name: MY_APP_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: my-app-secret
+                key: secret-key
+
+        # -- Secrets and/or ConfigMaps to be loaded as environment variables
+        envFrom:
+          - configMapRef:
+              name: my-app-config
+          - secretRef:
+              name: my-app-secret
+
+service:
+  app:
+    enabled: true
+    nameOverride: ""
+    annotations: {}
+    type: ClusterIP
+    controller: myController
+    ports:
+      http:
+        enabled: true
+        port: 3000
+        targetPort: 3000
+
+ingress:
+  appIngress:
+    enabled: false
+    nameOverride: ""
+    annotations: {}
+    className: "nginx"
+    hosts:
+      - host: my-app.example.com
+        paths:
+          - path: /
+            service:
+              identifier: app
+              port: http
+    tls:
+      - secretName: my-tls-secret
+        hosts:
+          - my-app.example.com
+
+configMaps:
+  config:
+    enabled: false
+    labels:
+      app: my-app-config
+    annotations:
+      description: "Configuration for my app"
+    data:
+      foo: bar
+      name: toto
+
+persistence:
+  enabled: false
+  type: persistentVolumeClaim
+  storageClass: "standard"
+  existingClaim: my-volume-claim
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  retain: true
+  globalMounts:
+    - path: /config
+      readOnly: false
+
+networkpolicies:
+  myNetworkPolicy:
+    enabled: false
+    controller: my-controller
+    policyTypes:
+      - Ingress
