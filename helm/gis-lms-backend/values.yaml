@@ -1,12 +1,10 @@
 global:
-  nameOverride: my-app
-  fullnameOverride: my-full-app
+  fullnameOverride: gis-lms-backend
   namespace: my-namespace
   labels:
-    app: my-app
+    app: gis-lms-backend
 
 defaultPodOptions:
-  imagePullSecrets: my-image-pull-secrets
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
@@ -22,22 +20,10 @@ controllers:
           tag: latest
           pullPolicy: IfNotPresent
 
-        # -- Environment variables, Helm templates can be used to dynamically set values
-        env:
-          - name: TZ
-            value: "UTC"
-          - name: MY_APP_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: my-app-secret
-                key: secret-key
-
-        # -- Secrets and/or ConfigMaps to be loaded as environment variables
+        # -- ConfigMap to be loaded as environment variables
         envFrom:
           - configMapRef:
-              name: my-app-config
-          - secretRef:
-              name: my-app-secret
+              name: gis-lms-backend-config
 
 service:
   app:
@@ -59,7 +45,7 @@ ingress:
     annotations: {}
     className: "nginx"
     hosts:
-      - host: my-app.example.com
+      - host: gis-lms-backend.example.com
         paths:
           - path: /
             service:
@@ -68,34 +54,22 @@ ingress:
     tls:
       - secretName: my-tls-secret
         hosts:
-          - my-app.example.com
+          - gis-lms-backend.example.com
 
 configMaps:
   config:
-    enabled: false
+    enabled: true
     labels:
-      app: my-app-config
+      app: gis-lms-backend-config
     annotations:
-      description: "Configuration for my app"
+      description: "Configuration for the GIS LMS Backend application."
     data:
       foo: bar
       name: toto
 
-persistence:
-  enabled: false
-  type: persistentVolumeClaim
-  storageClass: "standard"
-  existingClaim: my-volume-claim
-  accessMode: ReadWriteOnce
-  size: 1Gi
-  retain: true
-  globalMounts:
-    - path: /config
-      readOnly: false
-
 networkpolicies:
   myNetworkPolicy:
-    enabled: false
-    controller: my-controller
+    enabled: true
+    controller: myController
     policyTypes:
       - Ingress
