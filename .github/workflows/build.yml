@@ -3,9 +3,9 @@ name: Build Docker
 on:
   push:
     branches:
-      - '**'
+      - "**"
     tags-ignore:
-      - 'v*'
+      - "v*"
 
 env:
   REGISTRY: ghcr.io
@@ -26,14 +26,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
+          submodules: true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       - name: Init
         run: make init
 
@@ -67,19 +68,19 @@ jobs:
           flavor: |
             latest=auto
             suffix=-${{ matrix.environment.name }},onlatest=true
-          images: '${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}'
+          images: "${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}"
 
       - name: Build and push
         uses: docker/build-push-action@v6
         if: github.event_name != 'pull_request'
         with:
-          push: 'false'
+          push: "false"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           build-args: ${{ matrix.environment.docker-build-args }}
           platforms: linux/amd64,linux/arm64
-            
+
       # Slim it!
 #      - uses: kitabisa/docker-slim-action@v1
 #        env:
