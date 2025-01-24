@@ -5,7 +5,7 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: 0.5
+          cpus: "0.5"
     ports:
       - "4317:4317" # OpenTelemetry gRPC receiver
       - "4318:4318" # OpenTelemetry receiver
@@ -20,7 +20,7 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: 1
+          cpus: "1"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-giss}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-giss-password}
@@ -36,7 +36,7 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: 0.5
+          cpus: "0.5"
     ports:
       - ${ADMINER_PORT:-18080}:8080
     environment:
@@ -53,7 +53,7 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: 0.5
+          cpus: "0.5"
     build:
       context: .
       dockerfile: Dockerfile
@@ -111,4 +111,4 @@ services:
       - --package-name
       - gen-server
 volumes:
-  db: { }
+  db: {}
