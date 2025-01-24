@@ -1,19 +1,19 @@
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
 use diesel::{AsChangeset, Insertable, Queryable, Selectable};
-use gen_server::models::{Course, CourseCreate, CourseUpdate};
+use gen_server::models::{Lesson, LessonCreate, LessonUpdate};
 use o2o::o2o;
 use serde_json::Value;
 
-static ID_PREFIX: &str = "co";
+static ID_PREFIX: &str = "ls";
 
 #[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
-#[from_owned(CourseCreate)]
-#[from_owned(CourseUpdate)]
-#[owned_into(Course)]
-#[diesel(table_name = crate::modules::db::schema::courses)]
+#[from_owned(LessonCreate)]
+#[from_owned(LessonUpdate)]
+#[owned_into(Lesson)]
+#[diesel(table_name = crate::modules::db::schema::lessons)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
-pub struct CourseEntity {
+pub struct LessonEntity {
     #[builder(default = "crate::modules::utils::id_gen::generate_id(ID_PREFIX)")]
     #[from(crate::modules::utils::id_gen::generate_id(ID_PREFIX))]
     pub id: String,
@@ -34,11 +34,11 @@ pub struct CourseEntity {
     pub meta: Option<Value>,
 
     #[map(~.clone())]
-    pub name: String,
+    pub module_id: String,
 
     #[map(~.clone())]
-    pub slug: String,
+    pub title: String,
 
     #[map(~.clone())]
-    pub description: String,
+    pub description: Option<String>,
 }

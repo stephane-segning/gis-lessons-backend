@@ -19,9 +19,17 @@ impl Lessons for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _body: LessonCreate,
+        body: LessonCreate,
     ) -> Result<CreateLessonResponse, ()> {
-        todo!()
+        let res = self
+            .lesson_service
+            .create_entity(body)
+            .await
+            .expect("Failed to create lesson");
+
+        Ok(CreateLessonResponse::Status201_LessonCreatedSuccessfully(
+            res,
+        ))
     }
 
     async fn delete_lesson(
@@ -29,9 +37,14 @@ impl Lessons for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: DeleteLessonPathParams,
+        path_params: DeleteLessonPathParams,
     ) -> Result<DeleteLessonResponse, ()> {
-        todo!()
+        self.lesson_service
+            .delete_entity(path_params.lesson_id)
+            .await
+            .expect("Failed to delete lesson");
+
+        Ok(DeleteLessonResponse::Status204_LessonDeletedSuccessfully)
     }
 
     async fn get_lesson(
@@ -39,19 +52,15 @@ impl Lessons for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: GetLessonPathParams,
+        path_params: GetLessonPathParams,
     ) -> Result<GetLessonResponse, ()> {
-        todo!()
-    }
+        let res = self
+            .lesson_service
+            .get_entity(path_params.lesson_id)
+            .await
+            .expect("Failed to get lesson");
 
-    async fn get_lesson_blocks(
-        &self,
-        _method: Method,
-        _host: Host,
-        _cookies: CookieJar,
-        _path_params: GetLessonBlocksPathParams,
-    ) -> Result<GetLessonBlocksResponse, ()> {
-        todo!()
+        Ok(GetLessonResponse::Status200_TheRequestedLesson(res))
     }
 
     async fn list_lesson(
@@ -59,9 +68,15 @@ impl Lessons for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: ListLessonQueryParams,
+        query_params: ListLessonQueryParams,
     ) -> Result<ListLessonResponse, ()> {
-        todo!()
+        let res = self
+            .lesson_service
+            .find_entity(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find lesson");
+
+        Ok(ListLessonResponse::Status200_AListOfLessons(res))
     }
 
     async fn update_lesson(
@@ -69,9 +84,17 @@ impl Lessons for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: UpdateLessonPathParams,
-        _body: LessonUpdate,
+        path_params: UpdateLessonPathParams,
+        body: LessonUpdate,
     ) -> Result<UpdateLessonResponse, ()> {
-        todo!()
+        let res = self
+            .lesson_service
+            .update_entity(path_params.lesson_id, body)
+            .await
+            .expect("Failed to update lesson");
+
+        Ok(UpdateLessonResponse::Status200_LessonUpdatedSuccessfully(
+            res,
+        ))
     }
 }

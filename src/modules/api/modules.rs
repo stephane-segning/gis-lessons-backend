@@ -8,8 +8,8 @@ use gen_server::apis::modules::{
     UpdateModuleResponse,
 };
 use gen_server::models::{
-    DeleteModulePathParams, GetModulePathParams,
-    ListModulesQueryParams, ModuleCreate, ModuleUpdate, UpdateModulePathParams,
+    DeleteModulePathParams, GetModulePathParams, ListModulesQueryParams, ModuleCreate,
+    ModuleUpdate, UpdateModulePathParams,
 };
 
 #[async_trait]
@@ -19,9 +19,17 @@ impl Modules for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _body: ModuleCreate,
+        body: ModuleCreate,
     ) -> Result<CreateModuleResponse, ()> {
-        todo!()
+        let res = self
+            .module_service
+            .create_entity(body)
+            .await
+            .expect("Failed to create module");
+
+        Ok(CreateModuleResponse::Status201_ModuleCreatedSuccessfully(
+            res,
+        ))
     }
 
     async fn delete_module(
@@ -29,9 +37,14 @@ impl Modules for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: DeleteModulePathParams,
+        path_params: DeleteModulePathParams,
     ) -> Result<DeleteModuleResponse, ()> {
-        todo!()
+        self.module_service
+            .delete_entity(path_params.module_id)
+            .await
+            .expect("Failed to delete module");
+
+        Ok(DeleteModuleResponse::Status204_ModuleDeletedSuccessfully)
     }
 
     async fn get_module(
@@ -39,9 +52,15 @@ impl Modules for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: GetModulePathParams,
+        path_params: GetModulePathParams,
     ) -> Result<GetModuleResponse, ()> {
-        todo!()
+        let res = self
+            .module_service
+            .get_entity(path_params.module_id)
+            .await
+            .expect("Failed to get module");
+
+        Ok(GetModuleResponse::Status200_TheRequestedModule(res))
     }
 
     async fn list_modules(
@@ -49,9 +68,15 @@ impl Modules for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: ListModulesQueryParams,
+        query_params: ListModulesQueryParams,
     ) -> Result<ListModulesResponse, ()> {
-        todo!()
+        let res = self
+            .module_service
+            .find_entity(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find module");
+
+        Ok(ListModulesResponse::Status200_AListOfModules(res))
     }
 
     async fn update_module(
@@ -59,9 +84,17 @@ impl Modules for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: UpdateModulePathParams,
-        _body: ModuleUpdate,
+        path_params: UpdateModulePathParams,
+        body: ModuleUpdate,
     ) -> Result<UpdateModuleResponse, ()> {
-        todo!()
+        let res = self
+            .module_service
+            .update_entity(path_params.module_id, body)
+            .await
+            .expect("Failed to update module");
+
+        Ok(UpdateModuleResponse::Status200_ModuleUpdatedSuccessfully(
+            res,
+        ))
     }
 }

@@ -8,8 +8,8 @@ use gen_server::apis::submissions::{
     ListSubmissionsResponse, Submissions, UpdateSubmissionResponse,
 };
 use gen_server::models::{
-    DeleteSubmissionPathParams, GetSubmissionPathParams,
-    ListSubmissionsQueryParams, SubmissionCreate, SubmissionUpdate, UpdateSubmissionPathParams,
+    DeleteSubmissionPathParams, GetSubmissionPathParams, ListSubmissionsQueryParams,
+    SubmissionCreate, SubmissionUpdate, UpdateSubmissionPathParams,
 };
 
 #[async_trait]
@@ -19,9 +19,15 @@ impl Submissions for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _body: SubmissionCreate,
+        body: SubmissionCreate,
     ) -> Result<CreateSubmissionResponse, ()> {
-        todo!()
+        let res = self
+            .submission_service
+            .create_entity(body)
+            .await
+            .expect("Failed to create submission");
+
+        Ok(CreateSubmissionResponse::Status201_SubmissionCreatedSuccessfully(res))
     }
 
     async fn delete_submission(
@@ -29,9 +35,14 @@ impl Submissions for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: DeleteSubmissionPathParams,
+        path_params: DeleteSubmissionPathParams,
     ) -> Result<DeleteSubmissionResponse, ()> {
-        todo!()
+        self.submission_service
+            .delete_entity(path_params.submission_id)
+            .await
+            .expect("Failed to delete submission");
+
+        Ok(DeleteSubmissionResponse::Status204_SubmissionDeletedSuccessfully)
     }
 
     async fn get_submission(
@@ -39,9 +50,15 @@ impl Submissions for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: GetSubmissionPathParams,
+        path_params: GetSubmissionPathParams,
     ) -> Result<GetSubmissionResponse, ()> {
-        todo!()
+        let res = self
+            .submission_service
+            .get_entity(path_params.submission_id)
+            .await
+            .expect("Failed to get submission");
+
+        Ok(GetSubmissionResponse::Status200_TheRequestedSubmission(res))
     }
 
     async fn list_submissions(
@@ -49,9 +66,15 @@ impl Submissions for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: ListSubmissionsQueryParams,
+        query_params: ListSubmissionsQueryParams,
     ) -> Result<ListSubmissionsResponse, ()> {
-        todo!()
+        let res = self
+            .submission_service
+            .find_entity(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find submission");
+
+        Ok(ListSubmissionsResponse::Status200_AListOfSubmissions(res))
     }
 
     async fn update_submission(
@@ -59,9 +82,15 @@ impl Submissions for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: UpdateSubmissionPathParams,
-        _body: SubmissionUpdate,
+        path_params: UpdateSubmissionPathParams,
+        body: SubmissionUpdate,
     ) -> Result<UpdateSubmissionResponse, ()> {
-        todo!()
+        let res = self
+            .submission_service
+            .update_entity(path_params.submission_id, body)
+            .await
+            .expect("Failed to update submission");
+
+        Ok(UpdateSubmissionResponse::Status200_SubmissionUpdatedSuccessfully(res))
     }
 }

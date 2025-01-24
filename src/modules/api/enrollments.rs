@@ -19,9 +19,15 @@ impl Enrollments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _body: EnrollmentCreate,
+        body: EnrollmentCreate,
     ) -> Result<CreateEnrollmentResponse, ()> {
-        todo!()
+        let res = self
+            .enrollment_service
+            .create_entity(body)
+            .await
+            .expect("Failed to create enrollment");
+
+        Ok(CreateEnrollmentResponse::Status201_EnrollmentCreatedSuccessfully(res))
     }
 
     async fn delete_enrollment(
@@ -29,9 +35,14 @@ impl Enrollments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: DeleteEnrollmentPathParams,
+        path_params: DeleteEnrollmentPathParams,
     ) -> Result<DeleteEnrollmentResponse, ()> {
-        todo!()
+        self.enrollment_service
+            .delete_entity(path_params.enrollment_id)
+            .await
+            .expect("Failed to delete enrollment");
+
+        Ok(DeleteEnrollmentResponse::Status204_EnrollmentDeletedSuccessfully)
     }
 
     async fn get_enrollment(
@@ -39,9 +50,15 @@ impl Enrollments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: GetEnrollmentPathParams,
+        path_params: GetEnrollmentPathParams,
     ) -> Result<GetEnrollmentResponse, ()> {
-        todo!()
+        let res = self
+            .enrollment_service
+            .get_entity(path_params.enrollment_id)
+            .await
+            .expect("Failed to get enrollment");
+
+        Ok(GetEnrollmentResponse::Status200_TheRequestedEnrollment(res))
     }
 
     async fn list_enrollments(
@@ -49,9 +66,15 @@ impl Enrollments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: ListEnrollmentsQueryParams,
+        query_params: ListEnrollmentsQueryParams,
     ) -> Result<ListEnrollmentsResponse, ()> {
-        todo!()
+        let res = self
+            .enrollment_service
+            .find_entity(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find enrollment");
+
+        Ok(ListEnrollmentsResponse::Status200_AListOfEnrollments(res))
     }
 
     async fn update_enrollment(
@@ -59,9 +82,15 @@ impl Enrollments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: UpdateEnrollmentPathParams,
-        _body: EnrollmentUpdate,
+        path_params: UpdateEnrollmentPathParams,
+        body: EnrollmentUpdate,
     ) -> Result<UpdateEnrollmentResponse, ()> {
-        todo!()
+        let res = self
+            .enrollment_service
+            .update_entity(path_params.enrollment_id, body)
+            .await
+            .expect("Failed to update enrollment");
+
+        Ok(UpdateEnrollmentResponse::Status200_EnrollmentUpdatedSuccessfully(res))
     }
 }
