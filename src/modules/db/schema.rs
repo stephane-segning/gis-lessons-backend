@@ -42,6 +42,10 @@ table! {
     }
 }
 
+diesel::joinable!(assignments -> lessons (lesson_id));
+
+diesel::allow_tables_to_appear_in_same_query!(lessons, assignments);
+
 table! {
     comments {
         id -> Text,
@@ -78,21 +82,14 @@ table! {
 
         module_id -> Text,
         title -> Text,
+        content -> Jsonb,
         description -> Nullable<Text>
     }
 }
 
-table! {
-    lesson_blocks {
-        id -> Text,
-        created_at -> Nullable<Timestamp>,
-        updated_at -> Nullable<Timestamp>,
-        meta -> Nullable<Jsonb>,
+diesel::joinable!(lessons -> modules (module_id));
 
-        r#type -> Text,
-        data -> Jsonb
-    }
-}
+diesel::allow_tables_to_appear_in_same_query!(modules, lessons);
 
 table! {
     modules {
@@ -107,13 +104,17 @@ table! {
     }
 }
 
+diesel::joinable!(modules -> courses (course_id));
+
+diesel::allow_tables_to_appear_in_same_query!(courses, modules);
+
 table! {
     submissions {
         id -> Text,
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
         meta -> Nullable<Jsonb>,
-        
+
         assignment_id -> Text,
         date_submitted -> Nullable<Timestamp>,
         status -> Text,
@@ -121,16 +122,28 @@ table! {
     }
 }
 
+diesel::joinable!(submissions -> assignments (assignment_id));
+
+diesel::allow_tables_to_appear_in_same_query!(assignments, submissions);
+
 table! {
-    submission_member (assignment_id, enrollment_id) {
+    submission_members (assignment_id, enrollment_id) {
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
         meta -> Nullable<Jsonb>,
-        
+
         assignment_id -> Text,
         enrollment_id -> Text,
-        
+
         submission_id -> Text,
         role -> Text,
     }
 }
+
+diesel::joinable!(submission_members -> assignments (assignment_id));
+diesel::joinable!(submission_members -> enrollments (enrollment_id));
+diesel::joinable!(submission_members -> submissions (submission_id));
+
+diesel::allow_tables_to_appear_in_same_query!(assignments, submission_members);
+diesel::allow_tables_to_appear_in_same_query!(enrollments, submission_members);
+diesel::allow_tables_to_appear_in_same_query!(submissions, submission_members);

@@ -8,4 +8,5 @@ pub mod health;
 pub mod lessons;
 pub mod metrics;
 pub mod modules;
+pub mod submission_members;
 pub mod submissions;

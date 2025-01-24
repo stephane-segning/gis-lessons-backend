@@ -1,17 +1,30 @@
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
-use diesel::{AsChangeset, Insertable, Queryable, Selectable};
+use diesel::{AsChangeset, Associations, Identifiable, Insertable, Queryable, Selectable};
 use gen_server::models::{Lesson, LessonCreate, LessonUpdate};
 use o2o::o2o;
 use serde_json::Value;
 
 static ID_PREFIX: &str = "ls";
 
-#[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
+#[derive(
+    o2o,
+    Debug,
+    Eq,
+    Identifiable,
+    Associations,
+    PartialEq,
+    Queryable,
+    Selectable,
+    Insertable,
+    AsChangeset,
+    Builder,
+)]
 #[from_owned(LessonCreate)]
 #[from_owned(LessonUpdate)]
 #[owned_into(Lesson)]
 #[diesel(table_name = crate::modules::db::schema::lessons)]
+#[diesel(belongs_to(crate::domain::module::ModuleEntity, foreign_key = module_id))]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct LessonEntity {
     #[builder(default = "crate::modules::utils::id_gen::generate_id(ID_PREFIX)")]
@@ -38,6 +51,10 @@ pub struct LessonEntity {
 
     #[map(~.clone())]
     pub title: String,
+
+    #[into(serde_json::from_value(~).expect("Failed to deserialize content"))]
+    #[from(serde_json::to_value(~).expect("Failed to deserialize content"))]
+    pub content: Value,
 
     #[map(~.clone())]
     pub description: Option<String>,

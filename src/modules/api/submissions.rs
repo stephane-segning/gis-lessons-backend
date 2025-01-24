@@ -4,12 +4,16 @@ use axum::extract::Host;
 use axum::http::Method;
 use axum_extra::extract::CookieJar;
 use gen_server::apis::submissions::{
-    CreateSubmissionResponse, DeleteSubmissionResponse, GetSubmissionResponse,
-    ListSubmissionsResponse, Submissions, UpdateSubmissionResponse,
+    CreateSubmissionMemberResponse, CreateSubmissionResponse, DeleteSubmissionMemberResponse,
+    DeleteSubmissionResponse, GetSubmissionMemberResponse, GetSubmissionResponse,
+    ListSubmissionMembersResponse, ListSubmissionsResponse, Submissions,
+    UpdateSubmissionMemberResponse, UpdateSubmissionResponse,
 };
 use gen_server::models::{
-    DeleteSubmissionPathParams, GetSubmissionPathParams, ListSubmissionsQueryParams,
-    SubmissionCreate, SubmissionUpdate, UpdateSubmissionPathParams,
+    CreateSubmissionMemberPathParams, DeleteSubmissionMemberPathParams, DeleteSubmissionPathParams,
+    GetSubmissionMemberPathParams, GetSubmissionPathParams, ListSubmissionMembersPathParams,
+    ListSubmissionsQueryParams, SubmissionCreate, SubmissionMemberCreate, SubmissionMemberUpdate,
+    SubmissionUpdate, UpdateSubmissionMemberPathParams, UpdateSubmissionPathParams,
 };
 
 #[async_trait]
@@ -30,6 +34,17 @@ impl Submissions for ApiService {
         Ok(CreateSubmissionResponse::Status201_SubmissionCreatedSuccessfully(res))
     }
 
+    async fn create_submission_member(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        path_params: CreateSubmissionMemberPathParams,
+        body: SubmissionMemberCreate,
+    ) -> Result<CreateSubmissionMemberResponse, ()> {
+        todo!()
+    }
+
     async fn delete_submission(
         &self,
         _method: Method,
@@ -43,6 +58,16 @@ impl Submissions for ApiService {
             .expect("Failed to delete submission");
 
         Ok(DeleteSubmissionResponse::Status204_SubmissionDeletedSuccessfully)
+    }
+
+    async fn delete_submission_member(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        path_params: DeleteSubmissionMemberPathParams,
+    ) -> Result<DeleteSubmissionMemberResponse, ()> {
+        todo!()
     }
 
     async fn get_submission(
@@ -59,6 +84,26 @@ impl Submissions for ApiService {
             .expect("Failed to get submission");
 
         Ok(GetSubmissionResponse::Status200_TheRequestedSubmission(res))
+    }
+
+    async fn get_submission_member(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        path_params: GetSubmissionMemberPathParams,
+    ) -> Result<GetSubmissionMemberResponse, ()> {
+        todo!()
+    }
+
+    async fn list_submission_members(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        path_params: ListSubmissionMembersPathParams,
+    ) -> Result<ListSubmissionMembersResponse, ()> {
+        todo!()
     }
 
     async fn list_submissions(
@@ -92,5 +137,16 @@ impl Submissions for ApiService {
             .expect("Failed to update submission");
 
         Ok(UpdateSubmissionResponse::Status200_SubmissionUpdatedSuccessfully(res))
+    }
+
+    async fn update_submission_member(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+        path_params: UpdateSubmissionMemberPathParams,
+        body: SubmissionMemberUpdate,
+    ) -> Result<UpdateSubmissionMemberResponse, ()> {
+        todo!()
     }
 }

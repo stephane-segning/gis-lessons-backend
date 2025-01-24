@@ -5,6 +5,7 @@ use crate::services::courses::handler::CourseService;
 use crate::services::enrollments::handler::EnrollmentService;
 use crate::services::lessons::handler::LessonService;
 use crate::services::modules::handler::ModuleService;
+use crate::services::submission_members::handler::SubmissionMemberService;
 use crate::services::submissions::handler::SubmissionService;
 use derive_builder::Builder;
 
@@ -18,6 +19,7 @@ pub struct ApiService {
     pub lesson_service: LessonService,
     pub module_service: ModuleService,
     pub submission_service: SubmissionService,
+    pub submission_member_service: SubmissionMemberService,
 }
 
 impl AsRef<ApiService> for ApiService {

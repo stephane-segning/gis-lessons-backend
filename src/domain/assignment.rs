@@ -1,17 +1,30 @@
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
-use diesel::{AsChangeset, Insertable, Queryable, Selectable};
+use diesel::{AsChangeset, Associations, Identifiable, Insertable, Queryable, Selectable};
 use gen_server::models::{Assignment, AssignmentCreate, AssignmentUpdate};
 use o2o::o2o;
 use serde_json::Value;
 
 static ID_PREFIX: &str = "as";
 
-#[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
+#[derive(
+    o2o,
+    Debug,
+    Eq,
+    Identifiable,
+    Associations,
+    PartialEq,
+    Queryable,
+    Selectable,
+    Insertable,
+    AsChangeset,
+    Builder,
+)]
 #[from_owned(AssignmentCreate)]
 #[from_owned(AssignmentUpdate)]
 #[owned_into(Assignment)]
 #[diesel(table_name = crate::modules::db::schema::assignments)]
+#[diesel(belongs_to(crate::domain::lesson::LessonEntity, foreign_key = lesson_id))]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct AssignmentEntity {
     #[builder(default = "crate::modules::utils::id_gen::generate_id(ID_PREFIX)")]

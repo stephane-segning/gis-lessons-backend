@@ -4,12 +4,12 @@ use axum::extract::Host;
 use axum::http::Method;
 use axum_extra::extract::CookieJar;
 use gen_server::apis::lessons::{
-    CreateLessonResponse, DeleteLessonResponse, GetLessonBlocksResponse, GetLessonResponse,
-    Lessons, ListLessonResponse, UpdateLessonResponse,
+    CreateLessonResponse, DeleteLessonResponse, GetLessonResponse, Lessons, ListLessonResponse,
+    UpdateLessonResponse,
 };
 use gen_server::models::{
-    DeleteLessonPathParams, GetLessonBlocksPathParams, GetLessonPathParams, LessonCreate,
-    LessonUpdate, ListLessonQueryParams, UpdateLessonPathParams,
+    DeleteLessonPathParams, GetLessonPathParams, LessonCreate, LessonUpdate, ListLessonQueryParams,
+    UpdateLessonPathParams,
 };
 
 #[async_trait]

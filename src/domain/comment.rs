@@ -1,7 +1,7 @@
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
 use diesel::{AsChangeset, Insertable, Queryable, Selectable};
-use gen_server::models::{Comment, CommentCreate};
+use gen_server::models::{Comment, CommentCreate, CommentUpdate};
 use o2o::o2o;
 use serde_json::Value;
 
@@ -9,6 +9,7 @@ static ID_PREFIX: &str = "cm";
 
 #[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
 #[from_owned(CommentCreate)]
+#[from_owned(CommentUpdate)]
 #[owned_into(Comment)]
 #[diesel(table_name = crate::modules::db::schema::comments)]
 #[diesel(check_for_backend(diesel::pg::Pg))]

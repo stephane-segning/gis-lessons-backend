@@ -2,18 +2,31 @@ use std::str::FromStr;
 
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
-use diesel::{AsChangeset, Insertable, Queryable, Selectable};
+use diesel::{AsChangeset, Associations, Identifiable, Insertable, Queryable, Selectable};
 use gen_server::models::{Submission, SubmissionCreate, SubmissionUpdate};
 use o2o::o2o;
 use serde_json::Value;
 
 static ID_PREFIX: &str = "su";
 
-#[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
+#[derive(
+    o2o,
+    Debug,
+    Eq,
+    Identifiable,
+    Associations,
+    PartialEq,
+    Queryable,
+    Selectable,
+    Insertable,
+    AsChangeset,
+    Builder,
+)]
 #[from_owned(SubmissionCreate)]
 #[from_owned(SubmissionUpdate)]
 #[owned_into(Submission)]
 #[diesel(table_name = crate::modules::db::schema::submissions)]
+#[diesel(belongs_to(crate::domain::assignment::AssignmentEntity, foreign_key = assignment_id))]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct SubmissionEntity {
     #[builder(default = "crate::modules::utils::id_gen::generate_id(ID_PREFIX)")]
@@ -41,7 +54,7 @@ pub struct SubmissionEntity {
     #[into(~.map(|x| x.and_utc()))]
     #[from(~.map(|x| x.naive_utc()))]
     pub date_submitted: Option<NaiveDateTime>,
-    
+
     #[into(gen_server::models::SubmissionStatus::from_str(&~).unwrap())]
     #[from(~.to_string())]
     pub status: String,
