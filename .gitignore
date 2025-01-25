@@ -3,4 +3,4 @@ target
 .env
 .docker/tmp
 gen-server
-helm/gis-lms-backend/charts/*.tgz
+*.tgz
