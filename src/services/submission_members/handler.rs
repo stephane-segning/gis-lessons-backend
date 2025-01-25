@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::domain::submission_member::SubmissionMemberEntity;
 use crate::modules::db::schema::submission_members::dsl::submission_members;
 use anyhow::Result;
@@ -6,10 +8,11 @@ use diesel::prelude::*;
 use diesel_async::pooled_connection::deadpool::Pool;
 use diesel_async::{AsyncPgConnection, RunQueryDsl};
 use gen_server::models::SubmissionMember;
+use tokio::sync::RwLock;
 
 #[derive(Clone, Builder)]
 pub struct SubmissionMemberService {
-    pool: Pool<AsyncPgConnection>,
+    pool: Arc<RwLock<Pool<AsyncPgConnection>>>,
 }
 
 impl SubmissionMemberService {
@@ -19,7 +22,9 @@ impl SubmissionMemberService {
         offset: Option<i64>,
         _q: Option<String>,
     ) -> Result<Vec<SubmissionMember>> {
-        let mut conn = self.pool.get().await?;
+        let pool = self.pool.read().await;
+        let mut conn = pool.get().await?;
+
         let offset = offset.unwrap_or(0);
         let limit = limit.unwrap_or(10);
 

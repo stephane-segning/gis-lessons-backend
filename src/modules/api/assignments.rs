@@ -8,8 +8,8 @@ use gen_server::apis::assignments::{
     ListAssignmentsResponse, UpdateAssignmentResponse,
 };
 use gen_server::models::{
-    AssignmentCreate, AssignmentUpdate, DeleteAssignmentPathParams, GetAssignmentPathParams
-    , ListAssignmentsQueryParams, UpdateAssignmentPathParams,
+    AssignmentCreate, AssignmentUpdate, DeleteAssignmentPathParams, GetAssignmentPathParams,
+    ListAssignmentsQueryParams, UpdateAssignmentPathParams,
 };
 
 #[async_trait]

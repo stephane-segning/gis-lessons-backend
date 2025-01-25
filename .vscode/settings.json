@@ -6,7 +6,9 @@
     "packages/link-frontend/**/*": true
   },
   "files.exclude": {
-    "packages/link-frontend": true
+    "packages/link-frontend": true,
+    "packages/gen-server/.openapi-generator": true,
+    ".idea": true
   },
   "rust-analyzer.inlayHints.bindingModeHints.enable": true,
   "rust-analyzer.inlayHints.genericParameterHints.lifetime.enable": true,

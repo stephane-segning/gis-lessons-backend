@@ -93,8 +93,6 @@ services:
       - "/tmp/artillery/test-run-report.json"
     volumes:
       - .docker/tmp:/tmp/artillery
-    depends_on:
-      - artillery
 
   openapi-generator-cli:
     image: openapitools/openapi-generator-cli

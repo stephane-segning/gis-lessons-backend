@@ -3,17 +3,27 @@ FROM rust as base
 LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
 LABEL org.opencontainers.image.description="UI Frontend for Vymalo Projects"
 
+ENV APP_NAME=backend
+
 WORKDIR /app
 
 FROM base as builder
 
 COPY ./ ./
 
-RUN cargo build --release
+RUN --mount=type=cache,target=/app/target \
+  --mount=type=cache,target=~/.cargo/git/db \
+  --mount=type=cache,target=~/.cargo/registry \
+  cargo build --release --locked \ 
+  && cp ./target/release/$APP_NAME $APP_NAME
 
 FROM debian:12 as dep
 
-RUN apt-get update && apt-get install -y libpq5
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update && apt-get install -y libpq5
 
 # Dependencies for libpq (used by diesel)
 RUN mkdir /deps && \
@@ -43,12 +53,13 @@ LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
 LABEL org.opencontainers.image.description="UI Frontend for Vymalo Projects"
 
 ENV RUST_LOG=warn
+ENV APP_NAME=backend
 
 WORKDIR /app
 
-COPY --from=builder /app/target/release/backend /app/backend
+COPY --from=builder /app/$APP_NAME /app/backend
 COPY --from=dep /deps /usr/lib/
 
 EXPOSE 3000
 
-CMD ["/app/backend"]
+ENTRYPOINT ["/app/backend"]
