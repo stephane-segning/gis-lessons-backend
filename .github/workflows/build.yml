@@ -37,9 +37,11 @@ jobs:
 
       - name: Init
         run: |
+          set -ex
+
           make init
           ls -la packages
-          ls -lah /app/packages/gen-server/Cargo.toml
+          ls -lah $(pwd)/packages/gen-server/Cargo.toml
 
       - name: Login to the Docker registry
         uses: docker/login-action@v3
