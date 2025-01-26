@@ -1,22 +1,35 @@
-FROM rust as base
+FROM rust:1 as base
 
-LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
-LABEL org.opencontainers.image.description="UI Frontend for Vymalo Projects"
+ENV APP_NAME=backend
 
 WORKDIR /app
 
 FROM base as builder
 
-COPY ./ ./
-
-RUN cargo build --release
+RUN \
+  --mount=type=bind,source=./Cargo.lock,target=/app/Cargo.lock \
+  --mount=type=bind,source=./Cargo.toml,target=/app/Cargo.toml \
+  --mount=type=bind,source=./migrations,target=/app/migrations \
+  --mount=type=bind,source=./packages,target=/app/packages \
+  --mount=type=bind,source=./src,target=/app/src \
+  --mount=type=cache,target=/app/target \
+  --mount=type=cache,target=/usr/local/cargo/registry \
+  cargo build --release --locked \ 
+  && cp ./target/release/$APP_NAME $APP_NAME
 
 FROM debian:12 as dep
 
-RUN apt-get update && apt-get install -y libpq5
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+
+RUN \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update && apt-get install -y libpq5
 
 # Dependencies for libpq (used by diesel)
-RUN mkdir /deps && \
+RUN \
+  --mount=type=cache,target=/usr/lib/*-linux-gnu \
+  mkdir /deps && \
   cp /usr/lib/*-linux-gnu/libpq.so* /deps && \
   cp /usr/lib/*-linux-gnu/libgssapi_*.so* /deps && \
   cp /usr/lib/*-linux-gnu/libunistring.so* /deps && \
@@ -39,16 +52,19 @@ RUN mkdir /deps && \
 
 FROM gcr.io/distroless/base-debian12:nonroot
 
-LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
-LABEL org.opencontainers.image.description="UI Frontend for Vymalo Projects"
+LABEL maintainer="stephane-segning <selastlambou@gmail.com>"
+LABEL org.opencontainers.image.description="backend for Adorsys GIS Lessons App"
 
 ENV RUST_LOG=warn
+ENV APP_NAME=backend
+ENV PORT=3000
+ENV HOST=0.0.0.0
 
 WORKDIR /app
 
-COPY --from=builder /app/target/release/backend /app/backend
+COPY --from=builder /app/$APP_NAME /app/backend
 COPY --from=dep /deps /usr/lib/
 
-EXPOSE 3000
+EXPOSE $PORT
 
-CMD ["/app/backend"]
+ENTRYPOINT ["/app/backend"]

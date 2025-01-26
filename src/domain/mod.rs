@@ -1,2 +1,9 @@
 pub mod activity;
+pub mod assignment;
+pub mod comment;
 pub mod course;
+pub mod enrollment;
+pub mod lesson;
+pub mod module;
+pub mod submission;
+pub mod submission_member;

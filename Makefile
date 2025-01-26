@@ -1,5 +1,5 @@
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-include .env
+
 ## ==========================================================
 ##    ___  ___       _              _         ___  _    _ 
 ##   / __>/ __> ___ | |_  ___  ___ | | ___   |  _>| |  | |
@@ -17,6 +17,9 @@ init: 				## Initialize the project
 
 help:				## Show this help
 	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
+
+pull:				## Pull the image
+	docker compose -p sschool -f compose.yaml pull $(c)
 
 build: init			## Build the project
 	docker compose -p sschool -f compose.yaml build $(c)

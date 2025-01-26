@@ -1,19 +1,20 @@
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
 use diesel::{AsChangeset, Insertable, Queryable, Selectable};
-use gen_server::models::{Course, CourseCreate, CourseUpdate};
+use gen_server::models::{Enrollment, EnrollmentCreate, EnrollmentUpdate};
 use o2o::o2o;
 use serde_json::Value;
+use std::str::FromStr;
 
-static ID_PREFIX: &str = "co";
+static ID_PREFIX: &str = "er";
 
 #[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
-#[from_owned(CourseCreate)]
-#[from_owned(CourseUpdate)]
-#[owned_into(Course)]
-#[diesel(table_name = crate::modules::db::schema::courses)]
+#[from_owned(EnrollmentCreate)]
+#[from_owned(EnrollmentUpdate)]
+#[owned_into(Enrollment)]
+#[diesel(table_name = crate::modules::db::schema::enrollments)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
-pub struct CourseEntity {
+pub struct EnrollmentEntity {
     #[builder(default = "crate::modules::utils::id_gen::generate_id(ID_PREFIX)")]
     #[from(crate::modules::utils::id_gen::generate_id(ID_PREFIX))]
     pub id: String,
@@ -34,11 +35,12 @@ pub struct CourseEntity {
     pub meta: Option<Value>,
 
     #[map(~.clone())]
-    pub name: String,
+    pub user_id: String,
 
     #[map(~.clone())]
-    pub slug: String,
+    pub course_id: String,
 
-    #[map(~.clone())]
-    pub description: String,
+    #[into(gen_server::models::EnrollmentType::from_str(&~).unwrap())]
+    #[from(~.to_string())]
+    pub enrollment_type: String,
 }

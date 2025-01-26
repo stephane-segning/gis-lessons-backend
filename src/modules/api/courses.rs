@@ -19,11 +19,11 @@ impl Courses for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _body: CourseCreate,
+        body: CourseCreate,
     ) -> Result<CreateCourseResponse, ()> {
         let res = self
             .course_service
-            .create_entity(_body)
+            .create_entity(body)
             .await
             .expect("Failed to create course");
 
@@ -37,10 +37,10 @@ impl Courses for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: DeleteCoursePathParams,
+        path_params: DeleteCoursePathParams,
     ) -> Result<DeleteCourseResponse, ()> {
         self.course_service
-            .delete_entity(_path_params.course_id)
+            .delete_entity(path_params.course_id)
             .await
             .expect("Failed to delete course");
 
@@ -52,11 +52,11 @@ impl Courses for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: GetCoursePathParams,
+        path_params: GetCoursePathParams,
     ) -> Result<GetCourseResponse, ()> {
         let res = self
             .course_service
-            .get_entity(_path_params.course_id)
+            .get_entity(path_params.course_id)
             .await
             .expect("Failed to get course");
 
@@ -84,12 +84,12 @@ impl Courses for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: UpdateCoursePathParams,
-        _body: CourseUpdate,
+        path_params: UpdateCoursePathParams,
+        body: CourseUpdate,
     ) -> Result<UpdateCourseResponse, ()> {
         let res = self
             .course_service
-            .update_entity(_path_params.course_id, _body)
+            .update_entity(path_params.course_id, body)
             .await
             .expect("Failed to update course");
 
