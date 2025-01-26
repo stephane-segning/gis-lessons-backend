@@ -37,7 +37,7 @@ impl ActivityService {
         let res = res.into_iter().map(|activity| activity.into()).collect();
         let total: i64 = activities.count().get_result(&mut conn).await?;
 
-        let page_meta = CorePageMeta::new(offset, limit, total);
+        let page_meta = CorePageMeta::new(limit, offset, total);
         Ok(PageActivity::new(page_meta, res))
     }
 }

@@ -10,7 +10,7 @@ CREATE TABLE activities
     updated_at  TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     meta        JSONB                    DEFAULT '{}',
 
-    user_id     TEXT                 NOT NULL,
+    user_id     TEXT                 NOT NULL REFERENCES accounts (id),
     entity_id   TEXT                 NOT NULL,
     entity_type activity_entity_type NOT NULL,
     content     VARCHAR              NOT NULL,

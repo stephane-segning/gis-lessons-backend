@@ -4,6 +4,7 @@ use diesel::{AsChangeset, Insertable, Queryable, Selectable};
 use gen_server::models::{Comment, CommentCreate, CommentUpdate};
 use o2o::o2o;
 use serde_json::Value;
+use std::str::FromStr;
 
 static ID_PREFIX: &str = "cm";
 
@@ -42,6 +43,7 @@ pub struct CommentEntity {
     #[map(~.clone())]
     pub content: Option<String>,
 
-    #[map(~.clone())]
+    #[into(~.map(|x| gen_server::models::CommentType::from_str(&x).unwrap()))]
+    #[from(~.map(|x| x.to_string()))]
     pub r#type: Option<String>,
 }

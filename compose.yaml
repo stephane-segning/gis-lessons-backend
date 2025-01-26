@@ -49,7 +49,7 @@ services:
   app:
     restart: unless-stopped
     deploy:
-      replicas: 2
+      replicas: 1
       resources:
         limits:
           memory: 1G
@@ -63,10 +63,10 @@ services:
       OTLP_METRIC_ENDPOINT: http://tracking:4318/v1/metrics
       OTLP_SERVICE_NAME: giss
       OTLP_VERSION: 1.0.0-rc1
-      LOG_LEVEL: ${LOG_LEVEL:-warn}
-      DB_MAX_THREAD_POOL: ${DB_MAX_THREAD_POOL:-30}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      DB_MAX_THREAD_POOL: ${DB_MAX_THREAD_POOL:-20}
     ports:
-      - ${APP_PORT:-3001-3005}:3000
+      - ${APP_PORT:-13001-13005}:3000
     depends_on:
       - postgres
       - tracking

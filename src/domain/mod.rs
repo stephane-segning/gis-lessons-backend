@@ -7,3 +7,4 @@ pub mod lesson;
 pub mod module;
 pub mod submission;
 pub mod submission_member;
+pub mod account;

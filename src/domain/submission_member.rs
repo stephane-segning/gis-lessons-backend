@@ -7,8 +7,6 @@ use gen_server::models::{SubmissionMember, SubmissionMemberCreate, SubmissionMem
 use o2o::o2o;
 use serde_json::Value;
 
-static ID_PREFIX: &str = "sm";
-
 #[derive(
     o2o, Debug, Eq, Associations, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder,
 )]

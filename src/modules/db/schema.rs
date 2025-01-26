@@ -1,6 +1,18 @@
 use diesel::table;
 
 table! {
+    accounts {
+        id -> Text,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+        meta -> Nullable<Jsonb>,
+
+        sub -> Text,
+        name -> Text
+    }
+}
+
+table! {
     activities {
         id -> Text,
         created_at -> Nullable<Timestamp>,
@@ -14,6 +26,10 @@ table! {
         action_type -> VarChar
     }
 }
+
+diesel::joinable!(activities -> accounts (user_id));
+
+diesel::allow_tables_to_appear_in_same_query!(activities, accounts);
 
 table! {
     courses {
@@ -60,6 +76,10 @@ table! {
     }
 }
 
+diesel::joinable!(comments -> accounts (user_id));
+
+diesel::allow_tables_to_appear_in_same_query!(comments, accounts);
+
 table! {
     enrollments {
         id -> Text,
@@ -72,6 +92,10 @@ table! {
         enrollment_type -> Text
     }
 }
+
+diesel::joinable!(enrollments -> accounts (user_id));
+
+diesel::allow_tables_to_appear_in_same_query!(enrollments, accounts);
 
 table! {
     lessons {

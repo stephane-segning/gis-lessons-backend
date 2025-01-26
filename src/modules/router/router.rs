@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::modules::api::handler::ApiService;
 use crate::modules::router::middlewares::apply_common_middlewares;
 use crate::services::health::handler::health;
@@ -10,7 +12,7 @@ use axum_otel_metrics::HttpMetricsLayer;
 use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use gen_server::server::new;
 
-pub async fn router(metrics: HttpMetricsLayer, api_service: ApiService) -> Result<Router> {
+pub async fn router(metrics: HttpMetricsLayer, api_service: Arc<ApiService>) -> Result<Router> {
     // Create the main router
     let app = new(api_service)
         .layer(OtelInResponseLayer::default())

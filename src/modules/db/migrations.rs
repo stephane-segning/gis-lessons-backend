@@ -11,9 +11,9 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 pub async fn run_migrations(database_url: String) -> Result<()> {
     tokio::task::spawn_blocking(move || {
         let mut conn = AsyncConnectionWrapper::<AsyncPgConnection>::establish(&database_url)
-            .unwrap_or_else(|_| app_panic(format!("Failed to connect to '{}'", database_url)));
+            .unwrap_or_else(|e| app_panic(format!("Failed to connect to db: {}", e)));
         conn.run_pending_migrations(MIGRATIONS)
-            .unwrap_or_else(|_| app_panic("Failed to run migrations"));
+            .unwrap_or_else(|e| app_panic(format!("Failed to run migrations: {}", e)));
     })
     .await?;
     Ok(())

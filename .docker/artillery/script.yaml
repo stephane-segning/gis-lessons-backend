@@ -1,36 +1,37 @@
 config:
-  target: 'http://app:3000'
+  target: "http://app:3000"
   phases:
     - duration: 120
       arrivalRate: 2000
 scenarios:
-  - name: 'Create course!'
+  - name: "Create course!"
     flow:
       - post:
-          url: '/api/courses'
+          url: "/api/courses"
           json:
-            name: 'Course {{ $randomNumber(1,10000) }}'
-            slug: 'some-course-{{ $randomString() }}'
+            name: "Course {{ $randomNumber(1,10000) }}"
+            description: "Some course {{ $randomNumber(1,10000) }} long description"
+            slug: "some-course-{{ $randomString() }}"
             meta:
-              'miaou-{{ $randomString() }}': 'Cat {{ $randomString() }}'
-              '{{ $randomNumber(1,10000) }}': {{ $randomNumber(1,10000) }}
+              "miaou-{{ $randomString() }}": "Cat {{ $randomString() }}"
+              "{{ $randomNumber(1,10000) }}": "{{ $randomNumber(1, 10000) }}"
           expect:
             - statusCode: 201
-  - name: 'Get courses'
+  - name: "Get courses"
     flow:
       - get:
-          url: '/api/courses'
+          url: "/api/courses"
           expect:
             - statusCode: 200
-  - name: 'Check health'
+  - name: "Check health"
     flow:
       - get:
-          url: '/health'
+          url: "/health"
           expect:
             - statusCode: 200
-  - name: 'Permanent redirect'
+  - name: "Permanent redirect"
     flow:
       - get:
-          url: '/'
+          url: "/"
           expect:
             - statusCode: 308

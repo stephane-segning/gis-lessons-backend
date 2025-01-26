@@ -49,7 +49,7 @@ macro_rules! generate_service {
                 let res = res.into_iter().map(|entity| entity.into()).collect();
                 let total: i64 = $table_name.count().get_result(&mut conn).await?;
 
-                let page_meta = CorePageMeta::new(offset, limit, total);
+                let page_meta = CorePageMeta::new(limit, offset, total);
                 Ok($page_meta::new(page_meta, res))
             }
 

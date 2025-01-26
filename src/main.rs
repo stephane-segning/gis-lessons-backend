@@ -16,7 +16,7 @@ use services::{
 };
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{net::TcpListener, sync::RwLock};
-use tracing::{debug, warn};
+use tracing::{debug, info};
 
 mod domain;
 mod modules;
@@ -76,10 +76,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .submission_member_service(submission_member_service)
         .build()?;
 
+    let api_service = Arc::new(api_service);
+
     let app = router(metrics, api_service).await?;
 
     // Start the server
-    warn!("Server running on http://{:?}", listener.local_addr()?);
+    info!("Server running on http://{:?}", listener.local_addr()?);
     axum::serve(listener, app).await?;
 
     // Shutdown the tracer provider
