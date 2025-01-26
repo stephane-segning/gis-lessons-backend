@@ -49,7 +49,7 @@ services:
   app:
     restart: unless-stopped
     deploy:
-      replicas: 1
+      replicas: 2
       resources:
         limits:
           memory: 1G

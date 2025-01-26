@@ -2,18 +2,16 @@ use envconfig::Envconfig;
 
 #[derive(Envconfig, Clone)]
 pub struct EnvConfig {
-    #[envconfig(
-        from = "DB_URL"
-    )]
+    #[envconfig(from = "DB_URL")]
     pub db_url: String,
 
     #[envconfig(from = "DB_MAX_THREAD_POOL", default = "10")]
     pub db_max_thread_pool: usize,
 
-    #[envconfig(from = "HTTP_HOST", default = "0.0.0.0")]
+    #[envconfig(from = "HOST", default = "0.0.0.0")]
     pub http_host: String,
 
-    #[envconfig(from = "HTTP_PORT", default = "3000")]
+    #[envconfig(from = "PORT", default = "3000")]
     pub http_port: u16,
 
     #[envconfig(from = "LOG_LEVEL", default = "debug")]

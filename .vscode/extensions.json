@@ -12,6 +12,7 @@
     "panicbit.cargo",
     "ms-vscode.makefile-tools",
     "tim-koehler.helm-intellisense",
-    "ms-kubernetes-tools.vscode-kubernetes-tools"
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "exiasr.hadolint"
   ]
 }

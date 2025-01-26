@@ -1,7 +1,4 @@
-FROM rust as base
-
-LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
-LABEL org.opencontainers.image.description="UI Frontend for Vymalo Projects"
+FROM rust:1 as base
 
 ENV APP_NAME=backend
 
@@ -55,17 +52,19 @@ RUN \
 
 FROM gcr.io/distroless/base-debian12:nonroot
 
-LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
-LABEL org.opencontainers.image.description="UI Frontend for Vymalo Projects"
+LABEL maintainer="stephane-segning <selastlambou@gmail.com>"
+LABEL org.opencontainers.image.description="backend for Adorsys GIS Lessons App"
 
 ENV RUST_LOG=warn
 ENV APP_NAME=backend
+ENV PORT=3000
+ENV HOST=0.0.0.0
 
 WORKDIR /app
 
 COPY --from=builder /app/$APP_NAME /app/backend
 COPY --from=dep /deps /usr/lib/
 
-EXPOSE 3000
+EXPOSE $PORT
 
 ENTRYPOINT ["/app/backend"]
