@@ -18,6 +18,9 @@ init: 				## Initialize the project
 help:				## Show this help
 	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
 
+pull:				## Pull the image
+	docker compose -p sschool -f compose.yaml pull $(c)
+
 build: init			## Build the project
 	docker compose -p sschool -f compose.yaml build $(c)
 up: init 			## Start the project
