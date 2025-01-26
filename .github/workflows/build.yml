@@ -69,14 +69,14 @@ jobs:
             latest=auto
           images: "${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}"
 
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        if: always()
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      #- name: Cache Docker layers
+      #  uses: actions/cache@v4
+      #  if: always()
+      #  with:
+      #    path: /tmp/.buildx-cache
+      #    key: ${{ runner.os }}-buildx-${{ github.sha }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-buildx-
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -89,8 +89,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           platforms: linux/amd64,linux/arm64
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          #cache-from: type=local,src=/tmp/.buildx-cache
+          #cache-to: type=local,dest=/tmp/.buildx-cache
 
       # Slim it!
       #      - uses: kitabisa/docker-slim-action@v1
