@@ -67,7 +67,6 @@ jobs:
             type=sha,format=long,prefix={{branch}}
           flavor: |
             latest=auto
-            suffix=-${{ matrix.environment.name }},onlatest=true
           images: "${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}"
 
       - name: Cache Docker layers
@@ -85,11 +84,10 @@ jobs:
         with:
           context: .
           file: "Dockerfile"
-          push: "false"
+          push: "true"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          build-args: ${{ matrix.environment.docker-build-args }}
           platforms: linux/amd64,linux/arm64
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
