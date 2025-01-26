@@ -70,6 +70,14 @@ jobs:
             suffix=-${{ matrix.environment.name }},onlatest=true
           images: "${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}"
 
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Build and push
         uses: docker/build-push-action@v6
         if: github.event_name != 'pull_request'
@@ -80,11 +88,13 @@ jobs:
           annotations: ${{ steps.meta.outputs.annotations }}
           build-args: ${{ matrix.environment.docker-build-args }}
           platforms: linux/amd64,linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
       # Slim it!
-#      - uses: kitabisa/docker-slim-action@v1
-#        env:
-#          DSLIM_HTTP_PROBE: false
-#        with:
-#          target: '${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}'
-#          tag: "slim"
+      #      - uses: kitabisa/docker-slim-action@v1
+      #        env:
+      #          DSLIM_HTTP_PROBE: false
+      #        with:
+      #          target: '${{ env.REGISTRY }}/${{ steps.string.outputs.lowercase }}'
+      #          tag: "slim"

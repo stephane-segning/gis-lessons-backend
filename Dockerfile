@@ -9,11 +9,14 @@ WORKDIR /app
 
 FROM base as builder
 
-COPY ./ ./
-
-RUN --mount=type=cache,target=/app/target \
-  --mount=type=cache,target=~/.cargo/git/db \
-  --mount=type=cache,target=~/.cargo/registry \
+RUN \
+  --mount=type=bind,source=./Cargo.lock,target=/app/Cargo.lock \
+  --mount=type=bind,source=./Cargo.toml,target=/app/Cargo.toml \
+  --mount=type=bind,source=./migrations,target=/app/migrations \
+  --mount=type=bind,source=./packages,target=/app/packages \
+  --mount=type=bind,source=./src,target=/app/src \
+  --mount=type=cache,target=/app/target \
+  --mount=type=cache,target=/usr/local/cargo/registry \
   cargo build --release --locked \ 
   && cp ./target/release/$APP_NAME $APP_NAME
 
@@ -21,12 +24,15 @@ FROM debian:12 as dep
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+RUN \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
   apt-get update && apt-get install -y libpq5
 
 # Dependencies for libpq (used by diesel)
-RUN mkdir /deps && \
+RUN \
+  --mount=type=cache,target=/usr/lib/*-linux-gnu \
+  mkdir /deps && \
   cp /usr/lib/*-linux-gnu/libpq.so* /deps && \
   cp /usr/lib/*-linux-gnu/libgssapi_*.so* /deps && \
   cp /usr/lib/*-linux-gnu/libunistring.so* /deps && \
