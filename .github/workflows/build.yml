@@ -41,7 +41,7 @@ jobs:
 
           make init
           ls -la packages
-          ls -lah $(pwd)/packages/gen-server/Cargo.toml
+          ls -lah packages/gen-server
 
       - name: Login to the Docker registry
         uses: docker/login-action@v3
@@ -87,6 +87,8 @@ jobs:
         uses: docker/build-push-action@v6
         if: github.event_name != 'pull_request'
         with:
+          context: .
+          file: "Dockerfile"
           push: "false"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
