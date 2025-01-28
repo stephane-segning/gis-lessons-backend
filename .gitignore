@@ -3,4 +3,5 @@ target
 .env
 .docker/tmp
 gen-server
+*.tgz
 tmp
