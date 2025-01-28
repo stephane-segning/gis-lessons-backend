@@ -1,75 +1,86 @@
-global:
-  fullnameOverride: gis-lms-backend
-  namespace: my-namespace
-  labels:
-    app: gis-lms-backend
-
-defaultPodOptions:
-  securityContext:
-    runAsUser: 1000
-    runAsGroup: 1000
-
-controllers:
-  myController:
-    type: Deployment
-    replicas: 1
-    containers:
-      app:
-        image:
-          repository: ghcr.io/stephane-segning/gis-lessons-backend
-          tag: latest
-          pullPolicy: IfNotPresent
-
-        # -- ConfigMap to be loaded as environment variables
-        envFrom:
-          - configMapRef:
-              name: gis-lms-backend-config
-
-service:
-  app:
-    enabled: true
-    nameOverride: ""
-    annotations: {}
-    type: ClusterIP
-    controller: myController
-    ports:
-      http:
-        enabled: true
-        port: 3000
-        targetPort: 3000
-
-ingress:
-  appIngress:
-    enabled: false
-    nameOverride: ""
-    annotations: {}
-    className: "nginx"
-    hosts:
-      - host: gis-lms-backend.example.com
-        paths:
-          - path: /
-            service:
-              identifier: app
-              port: http
-    tls:
-      - secretName: my-tls-secret
-        hosts:
-          - gis-lms-backend.example.com
-
-configMaps:
-  config:
-    enabled: true
+app-template:
+  global:
+    fullnameOverride: gis-lms-backend-app
+    namespace: my-namespace
     labels:
-      app: gis-lms-backend-config
-    annotations:
-      description: "Configuration for the GIS LMS Backend application."
-    data:
-      foo: bar
-      name: toto
+      app: gis-lms-backend
 
-networkpolicies:
+  defaultPodOptions:
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+
+  controllers:
+    myController:
+      type: deployment
+      replicas: 1
+      containers:
+        app:
+          image:
+            repository: ghcr.io/stephane-segning/gis-lessons-backend
+            tag: latest
+            pullPolicy: IfNotPresent
+
+          # -- ConfigMap to be loaded as environment variables
+          envFrom:
+            - configMapRef:
+                name: gis-lms-backend-config
+
+  service:
+    app:
+      enabled: true
+      annotations: {}
+      nameOverride: service
+      type: ClusterIP
+      controller: myController
+      ports:
+        http:
+          enabled: true
+          port: 3000
+          targetPort: 3000
+
+  ingress:
+    app:
+      enabled: true
+      annotations: {}
+      nameOverride: ingress
+      className: "nginx"
+      hosts:
+        - host: gis-lms-backend.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                identifier: app
+                port: http
+      tls:
+        - secretName: my-tls-secret
+          hosts:
+            - gis-lms-backend.example.com
+
+  configMaps:
+    config:
+      enabled: true
+      labels:
+        app: gis-lms-backend
+      annotations:
+        description: "Configuration for the GIS LMS Backend application."
+      data:
+        foo: bar
+        name: toto
+
+  networkpolicies:
   myNetworkPolicy:
     enabled: true
     controller: myController
     policyTypes:
       - Ingress
+    rules:
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: gis-lms-backend
+          ports:
+            - protocol: TCP
+              port: 3000
