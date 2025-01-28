@@ -71,17 +71,17 @@ app-template:
         name: toto
 
   networkpolicies:
-  myNetworkPolicy:
-    enabled: true
-    controller: myController
-    policyTypes:
-      - Ingress
-    rules:
-      ingress:
-        - from:
-            - podSelector:
-                matchLabels:
-                  app: gis-lms-backend
-          ports:
-            - protocol: TCP
-              port: 3000
+    myNetworkPolicy:
+      enabled: true
+      controller: myController
+      policyTypes:
+        - Ingress
+      rules:
+        ingress:
+          - from:
+              - podSelector:
+                  matchLabels:
+                    app: gis-lms-backend
+            ports:
+              - protocol: TCP
+                port: 3000
