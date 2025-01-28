@@ -1,6 +1,6 @@
 app-template:
   global:
-    fullnameOverride: gis-lms-backend-app
+    fullnameOverride: gis-lms-backend
     namespace: my-namespace
     labels:
       app: gis-lms-backend
@@ -16,6 +16,7 @@ app-template:
       replicas: 1
       containers:
         app:
+          nameOverride: gis-lms-backend-app
           image:
             repository: ghcr.io/stephane-segning/gis-lessons-backend
             tag: latest
