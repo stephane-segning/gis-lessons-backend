@@ -1,13 +1,15 @@
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
-use diesel::{AsChangeset, Insertable, Queryable, Selectable};
+use diesel::{AsChangeset, Identifiable, Insertable, Queryable, Selectable};
 use gen_server::models::{Course, CourseCreate, CourseUpdate};
 use o2o::o2o;
 use serde_json::Value;
 
 static ID_PREFIX: &str = "co";
 
-#[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
+#[derive(
+    o2o, Debug, Eq, PartialEq, Identifiable, Queryable, Selectable, Insertable, AsChangeset, Builder,
+)]
 #[from_owned(CourseCreate)]
 #[from_owned(CourseUpdate)]
 #[owned_into(Course)]

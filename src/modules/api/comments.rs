@@ -6,10 +6,7 @@ use axum_extra::extract::CookieJar;
 use gen_server::apis::comments::{
     Comments, CreateCommentResponse, GetCommentResponse, ListCommentsResponse,
 };
-use gen_server::models::{
-    CommentCreate, GetCommentPathParams,
-    ListCommentsQueryParams,
-};
+use gen_server::models::{CommentCreate, GetCommentPathParams, ListCommentsQueryParams};
 
 #[async_trait]
 impl Comments for ApiService {
@@ -18,9 +15,15 @@ impl Comments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _body: CommentCreate,
+        body: CommentCreate,
     ) -> Result<CreateCommentResponse, ()> {
-        todo!()
+        let res = self
+            .comment_service
+            .create_entity(body)
+            .await
+            .expect("Failed to create comment");
+
+        Ok(CreateCommentResponse::Status201_SubmissionCreatedSuccessfully(res))
     }
 
     async fn get_comment(
@@ -28,9 +31,15 @@ impl Comments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: GetCommentPathParams,
+        path_params: GetCommentPathParams,
     ) -> Result<GetCommentResponse, ()> {
-        todo!()
+        let res = self
+            .comment_service
+            .get_entity(path_params.comment_id)
+            .await
+            .expect("Failed to get comment");
+
+        Ok(GetCommentResponse::Status200_TheRequestedComment(res))
     }
 
     async fn list_comments(
@@ -38,8 +47,14 @@ impl Comments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: ListCommentsQueryParams,
+        query_params: ListCommentsQueryParams,
     ) -> Result<ListCommentsResponse, ()> {
-        todo!()
+        let res = self
+            .comment_service
+            .find_entity(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find comment");
+
+        Ok(ListCommentsResponse::Status200_AListOfComments(res))
     }
 }

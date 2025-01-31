@@ -12,8 +12,9 @@ use gen_server::apis::submissions::{
 use gen_server::models::{
     CreateSubmissionMemberPathParams, DeleteSubmissionMemberPathParams, DeleteSubmissionPathParams,
     GetSubmissionMemberPathParams, GetSubmissionPathParams, ListSubmissionMembersPathParams,
-    ListSubmissionsQueryParams, SubmissionCreate, SubmissionMemberCreate, SubmissionMemberUpdate,
-    SubmissionUpdate, UpdateSubmissionMemberPathParams, UpdateSubmissionPathParams,
+    ListSubmissionMembersQueryParams, ListSubmissionsQueryParams, SubmissionCreate,
+    SubmissionMemberCreate, SubmissionMemberUpdate, SubmissionUpdate,
+    UpdateSubmissionMemberPathParams, UpdateSubmissionPathParams,
 };
 
 #[async_trait]
@@ -39,10 +40,16 @@ impl Submissions for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        path_params: CreateSubmissionMemberPathParams,
+        _path_params: CreateSubmissionMemberPathParams,
         body: SubmissionMemberCreate,
     ) -> Result<CreateSubmissionMemberResponse, ()> {
-        todo!()
+        let res = self
+            .submission_member_service
+            .create_entity(body)
+            .await
+            .expect("Failed to create submission member");
+
+        Ok(CreateSubmissionMemberResponse::Status201_SubmissionCreatedSuccessfully(res))
     }
 
     async fn delete_submission(
@@ -67,7 +74,12 @@ impl Submissions for ApiService {
         _cookies: CookieJar,
         path_params: DeleteSubmissionMemberPathParams,
     ) -> Result<DeleteSubmissionMemberResponse, ()> {
-        todo!()
+        self.submission_member_service
+            .delete_entity(path_params.submission_id, path_params.enrollment_id)
+            .await
+            .expect("Failed to delete submission member");
+
+        Ok(DeleteSubmissionMemberResponse::Status204_Submission)
     }
 
     async fn get_submission(
@@ -93,7 +105,15 @@ impl Submissions for ApiService {
         _cookies: CookieJar,
         path_params: GetSubmissionMemberPathParams,
     ) -> Result<GetSubmissionMemberResponse, ()> {
-        todo!()
+        let res = self
+            .submission_member_service
+            .get_entity(path_params.submission_id, path_params.enrollment_id)
+            .await
+            .expect("Failed to get submission member");
+
+        Ok(GetSubmissionMemberResponse::Status200_TheRequestedMember(
+            res,
+        ))
     }
 
     async fn list_submission_members(
@@ -102,8 +122,20 @@ impl Submissions for ApiService {
         _host: Host,
         _cookies: CookieJar,
         path_params: ListSubmissionMembersPathParams,
+        query_params: ListSubmissionMembersQueryParams,
     ) -> Result<ListSubmissionMembersResponse, ()> {
-        todo!()
+        let res = self
+            .submission_member_service
+            .find_entity(
+                path_params.submission_id,
+                query_params.limit,
+                query_params.offset,
+                query_params.q,
+            )
+            .await
+            .expect("Failed to find submission member");
+
+        Ok(ListSubmissionMembersResponse::Status200_AListOfMembers(res))
     }
 
     async fn list_submissions(
@@ -147,6 +179,12 @@ impl Submissions for ApiService {
         path_params: UpdateSubmissionMemberPathParams,
         body: SubmissionMemberUpdate,
     ) -> Result<UpdateSubmissionMemberResponse, ()> {
-        todo!()
+        let res = self
+            .submission_member_service
+            .update_entity(path_params.submission_id, path_params.enrollment_id, body)
+            .await
+            .expect("Failed to update submission member");
+
+        Ok(UpdateSubmissionMemberResponse::Status200_SubmissionUpdatedSuccessfully(res))
     }
 }

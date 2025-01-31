@@ -6,6 +6,8 @@ WORKDIR /app
 
 FROM base as builder
 
+ENV CARGO_TERM_COLOR=always
+
 RUN \
   --mount=type=bind,source=./Cargo.lock,target=/app/Cargo.lock \
   --mount=type=bind,source=./Cargo.toml,target=/app/Cargo.toml \
@@ -13,7 +15,9 @@ RUN \
   --mount=type=bind,source=./packages,target=/app/packages \
   --mount=type=bind,source=./src,target=/app/src \
   --mount=type=cache,target=/app/target \
-  --mount=type=cache,target=/usr/local/cargo/registry \
+  --mount=type=cache,target=/usr/local/cargo/registry/cache \
+  --mount=type=cache,target=/usr/local/cargo/registry/index \
+  --mount=type=cache,target=/usr/local/cargo/git/db \
   cargo build --release --locked \ 
   && cp ./target/release/$APP_NAME $APP_NAME
 

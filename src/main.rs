@@ -1,19 +1,10 @@
-use crate::modules::api::handler::ApiServiceBuilder;
+use crate::modules::api::handler::ApiService;
 use crate::modules::db::connection::get_connection;
 use crate::modules::env::env::EnvConfig;
 use crate::modules::router::router::router;
 use crate::modules::tracer::init::init_tracing;
-use crate::services::activities::handler::ActivityServiceBuilder;
-use crate::services::courses::handler::CourseServiceBuilder;
 use envconfig::Envconfig;
 use opentelemetry::global;
-use services::{
-    assignments::handler::AssignmentServiceBuilder, comments::handler::CommentServiceBuilder,
-    enrollments::handler::EnrollmentServiceBuilder, lessons::handler::LessonServiceBuilder,
-    modules::handler::ModuleServiceBuilder,
-    submission_members::handler::SubmissionMemberServiceBuilder,
-    submissions::handler::SubmissionServiceBuilder,
-};
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{net::TcpListener, sync::RwLock};
 use tracing::{debug, info};
@@ -36,47 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listener = TcpListener::bind(addr).await?;
     debug!(config.http_port, config.http_host, "Will start");
 
-    let activity_service = ActivityServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let assignment_service = AssignmentServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let comment_service = CommentServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let course_service = CourseServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let enrollment_service = EnrollmentServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let lesson_service = LessonServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let module_service = ModuleServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let submission_service = SubmissionServiceBuilder::default()
-        .pool(db_pool.clone())
-        .build()?;
-    let submission_member_service = SubmissionMemberServiceBuilder::default()
-        .pool(db_pool)
-        .build()?;
-
-    let api_service = ApiServiceBuilder::default()
-        .activity_service(activity_service)
-        .assignment_service(assignment_service)
-        .comment_service(comment_service)
-        .course_service(course_service)
-        .enrollment_service(enrollment_service)
-        .lesson_service(lesson_service)
-        .module_service(module_service)
-        .submission_service(submission_service)
-        .submission_member_service(submission_member_service)
-        .build()?;
-
-    let api_service = Arc::new(api_service);
+    let api_service = Arc::new(ApiService::create(db_pool)?);
 
     let app = router(metrics, api_service).await?;
 

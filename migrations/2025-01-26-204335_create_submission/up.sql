@@ -10,7 +10,7 @@ CREATE TABLE submissions
 
     assignment_id  TEXT            NOT NULL REFERENCES assignments (id),
     date_submitted TIMESTAMP WITH TIME ZONE,
-    status       submission_type NOT NULL,
+    status         submission_type NOT NULL,
     content        TEXT            NOT NULL
 );
 

@@ -1,9 +1,9 @@
 pub mod handler;
-mod courses;
-mod activities;
-mod assignments;
-mod comments;
-mod enrollments;
-mod lessons;
-mod modules;
-mod submissions;
+pub mod courses;
+pub mod activities;
+pub mod assignments;
+pub mod comments;
+pub mod enrollments;
+pub mod lessons;
+pub mod modules;
+pub mod submissions;

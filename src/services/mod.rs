@@ -1,7 +1,7 @@
 pub mod activities;
 pub mod assignments;
 pub mod comments;
-pub(crate) mod core;
+pub mod core;
 pub mod courses;
 pub mod enrollments;
 pub mod health;

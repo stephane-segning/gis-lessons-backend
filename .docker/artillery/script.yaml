@@ -23,6 +23,30 @@ scenarios:
           url: "/api/courses"
           expect:
             - statusCode: 200
+  - name: "Get activities"
+    flow:
+      - get:
+          url: "/api/activities"
+          expect:
+            - statusCode: 200
+  - name: "Get comments"
+    flow:
+      - get:
+          url: "/api/comments"
+          expect:
+            - statusCode: 200
+  - name: "Get modules"
+    flow:
+      - get:
+          url: "/api/modules"
+          expect:
+            - statusCode: 200
+  - name: "Get assignments"
+    flow:
+      - get:
+          url: "/api/assignments"
+          expect:
+            - statusCode: 200
   - name: "Check health"
     flow:
       - get:

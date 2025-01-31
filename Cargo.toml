@@ -31,7 +31,9 @@ serde_json = { version = "1", features = ["raw_value"] }
 envconfig = { version = "0" }
 derive_builder = { version = "0" }
 anyhow = { version = "1" }
+thiserror = { version = "2" }
 
 gen-server = { path = "./packages/gen-server", features = ["conversion"] }
+
 cuid2 = { version = "0" }
-o2o = "0.5.3"
+o2o = "0"

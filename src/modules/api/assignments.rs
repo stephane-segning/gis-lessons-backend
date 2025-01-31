@@ -19,9 +19,15 @@ impl Assignments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _body: AssignmentCreate,
+        body: AssignmentCreate,
     ) -> Result<CreateAssignmentResponse, ()> {
-        todo!()
+        let res = self
+            .assignment_service
+            .create_entity(body)
+            .await
+            .expect("Failed to create assignment");
+
+        Ok(CreateAssignmentResponse::Status201_AssignmentCreatedSuccessfully(res))
     }
 
     async fn delete_assignment(
@@ -29,9 +35,14 @@ impl Assignments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: DeleteAssignmentPathParams,
+        path_params: DeleteAssignmentPathParams,
     ) -> Result<DeleteAssignmentResponse, ()> {
-        todo!()
+        self.assignment_service
+            .delete_entity(path_params.assignment_id)
+            .await
+            .expect("Failed to delete assignment");
+
+        Ok(DeleteAssignmentResponse::Status204_AssignmentDeletedSuccessfully)
     }
 
     async fn get_assignment(
@@ -39,9 +50,15 @@ impl Assignments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: GetAssignmentPathParams,
+        path_params: GetAssignmentPathParams,
     ) -> Result<GetAssignmentResponse, ()> {
-        todo!()
+        let res = self
+            .assignment_service
+            .get_entity(path_params.assignment_id)
+            .await
+            .expect("Failed to get assignment");
+
+        Ok(GetAssignmentResponse::Status200_TheRequestedAssignment(res))
     }
 
     async fn list_assignments(
@@ -49,9 +66,15 @@ impl Assignments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _query_params: ListAssignmentsQueryParams,
+        query_params: ListAssignmentsQueryParams,
     ) -> Result<ListAssignmentsResponse, ()> {
-        todo!()
+        let res = self
+            .assignment_service
+            .find_entity(query_params.limit, query_params.offset, query_params.q)
+            .await
+            .expect("Failed to find assignment");
+
+        Ok(ListAssignmentsResponse::Status200_AListOfAssignments(res))
     }
 
     async fn update_assignment(
@@ -59,9 +82,15 @@ impl Assignments for ApiService {
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
-        _path_params: UpdateAssignmentPathParams,
-        _body: AssignmentUpdate,
+        path_params: UpdateAssignmentPathParams,
+        body: AssignmentUpdate,
     ) -> Result<UpdateAssignmentResponse, ()> {
-        todo!()
+        let res = self
+            .assignment_service
+            .update_entity(path_params.assignment_id, body)
+            .await
+            .expect("Failed to update assignment");
+
+        Ok(UpdateAssignmentResponse::Status200_AssignmentUpdatedSuccessfully(res))
     }
 }
