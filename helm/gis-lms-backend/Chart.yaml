@@ -13,3 +13,7 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 16.4.5
     condition: postgres.enabled
+  - name: jaeger
+    repository: https://jaegertracing.github.io/helm-charts
+    version: "3.4.0"
+    condition: jaeger.enabled

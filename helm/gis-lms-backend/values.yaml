@@ -40,6 +40,24 @@ postgres:
               matchLabels:
                 app: gis-lms-backend
 
+jaeger:
+  enabled: true
+  agent:
+    enabled: true
+  collector:
+    enabled: true
+  query:
+    enabled: true
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      host: "elasticsearch"
+      port: 9200
+      user: "elastic"
+      existingSecret: "jaeger-secret"
+      secretKeys:
+        passwordKey: "elasticsearch-password"
+
 app-template:
   global:
     fullnameOverride: gis-lms-backend
@@ -124,8 +142,8 @@ app-template:
         HOST: "0.0.0.0"
         PORT: "3000"
         LOG_LEVEL: "debug"
-        OTLP_SPAN_ENDPOINT: "http://localhost:4317"
-        OTLP_METRIC_ENDPOINT: "http://localhost:4318/v1/metrics"
+        OTLP_SPAN_ENDPOINT: "http://jaeger-collector:4317"
+        OTLP_METRIC_ENDPOINT: "http://jaeger-collector:4318/v1/metrics"
         OTLP_SERVICE_NAME: "rust-app-example"
         OTLP_VERSION: "0.1.0"
 
