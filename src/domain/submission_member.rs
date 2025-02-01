@@ -22,6 +22,7 @@ pub struct SubmissionMemberEntity {
     #[builder(default = "None")]
     #[into(~.map(|x| x.and_utc()))]
     #[from({None})]
+    #[map(~.clone())]
     pub created_at: Option<NaiveDateTime>,
 
     #[builder(default = "None")]

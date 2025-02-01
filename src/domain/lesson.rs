@@ -29,6 +29,7 @@ static ID_PREFIX: &str = "ls";
 pub struct LessonEntity {
     #[builder(default = "crate::modules::utils::id_gen::generate_id(ID_PREFIX)")]
     #[from(crate::modules::utils::id_gen::generate_id(ID_PREFIX))]
+    #[map(~.clone())]
     pub id: String,
 
     #[builder(default = "None")]
