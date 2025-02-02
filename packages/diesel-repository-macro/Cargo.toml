@@ -1,0 +1,18 @@
+[package]
+name = "diesel-repository-macro"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "2.0", features = ["full"] }
+
+diesel = { version = "2", features = ["postgres_backend"] }
+diesel-async = { version = "0", features = ["postgres", "deadpool", "async-connection-wrapper", "sync-connection-wrapper"] }
+diesel-repository = { path = "../diesel-repository" }
+
+[dev-dependencies]

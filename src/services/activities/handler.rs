@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::domain::activity::ActivityEntity;
+use crate::domain::activity::{ActivityEntity, ActivityEntityRepo};
 use crate::modules::db::schema::activities::dsl::activities;
 use anyhow::Result;
 use derive_builder::Builder;
@@ -9,6 +9,7 @@ use diesel_async::pooled_connection::deadpool::Pool;
 use diesel_async::{AsyncPgConnection, RunQueryDsl};
 use gen_server::models::{CorePageMeta, PageActivity};
 use tokio::sync::RwLock;
+use diesel_repository::Paged;
 
 #[derive(Clone, Builder)]
 pub struct ActivityService {
@@ -38,6 +39,15 @@ impl ActivityService {
         let total: i64 = activities.count().get_result(&mut conn).await?;
 
         let page_meta = CorePageMeta::new(limit, offset, total);
+        Ok(PageActivity::new(page_meta, res))
+    }
+    
+    pub async fn get_one(
+        &self,
+        id: &str
+    ) -> Result<PageActivity> {
+        let activity = ActivityEntityRepo::get_one_by_id(id).await?;
+        
         Ok(PageActivity::new(page_meta, res))
     }
 }

@@ -1,11 +1,13 @@
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
-use diesel::{AsChangeset, Insertable, Queryable, Selectable, Identifiable};
+use diesel::{AsChangeset, Identifiable, Insertable, Queryable, Selectable};
 use serde_json::Value;
 
 static ID_PREFIX: &str = "ct";
 
-#[derive(Debug, Eq, PartialEq, Queryable, Identifiable, Selectable, Insertable, AsChangeset, Builder)]
+#[derive(
+    Debug, Eq, PartialEq, Queryable, Identifiable, Selectable, Insertable, AsChangeset, Builder,
+)]
 #[diesel(table_name = crate::modules::db::schema::accounts)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct AccountEntity {

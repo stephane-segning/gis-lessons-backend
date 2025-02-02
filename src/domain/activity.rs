@@ -1,16 +1,34 @@
+use crate::modules::db::schema::activities::dsl::activities;
 use derive_builder::Builder;
 use diesel::internal::derives::multiconnection::chrono::NaiveDateTime;
-use diesel::{AsChangeset, Insertable, Queryable, Selectable};
+use diesel::{AsChangeset, Insertable, Queryable, QueryableByName, Selectable};
+use diesel_repository_macro::RepositoryAsync;
 use o2o::o2o;
 use serde_json::Value;
 use std::str::FromStr;
 
 static ID_PREFIX: &str = "ac";
 
-#[derive(o2o, Debug, Eq, PartialEq, Queryable, Selectable, Insertable, AsChangeset, Builder)]
+#[derive(
+    o2o,
+    Debug,
+    Eq,
+    PartialEq,
+    Queryable,
+    Selectable,
+    Insertable,
+    AsChangeset,
+    Builder,
+    QueryableByName,
+    RepositoryAsync,
+)]
 #[owned_into(gen_server::models::Activity)]
 #[diesel(table_name = crate::modules::db::schema::activities)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
+#[repo_table_name("activities")]
+#[id_type("String")]
+#[repo_features(get_one, save_one, delete_one, find_page, fts_search)]
+#[fts_fields(content, entity_type)]
 pub struct ActivityEntity {
     #[builder(default = "crate::modules::utils::id_gen::generate_id(ID_PREFIX)")]
     #[from(crate::modules::utils::id_gen::generate_id(ID_PREFIX))]
