@@ -5,5 +5,8 @@ dependencies:
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 16.4.5
-digest: sha256:3bbd1ba5f1fb9d72ebc93740c22783b9428d3594fa96dd71a906b23e5cbad56d
-generated: "2025-01-30T08:19:59.272208991+01:00"
+- name: jaeger
+  repository: https://jaegertracing.github.io/helm-charts
+  version: 3.4.0
+digest: sha256:7363432e0ce349aeb759ebaa89287846af4c2ab70e897abd346f5adb0b981c1c
+generated: "2025-02-03T08:24:52.922837129+01:00"
