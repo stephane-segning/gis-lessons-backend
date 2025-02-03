@@ -1,3 +1,63 @@
+postgres:
+  enabled: true
+  architecture: standalone
+  auth:
+    enablePostgresUser: true
+    username: "myuser"
+    database: "mydatabase"
+    existingSecret: "gis-lms-backend-secret"
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+      replicationPasswordKey: replication-password
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+  service:
+    type: ClusterIP
+    ports:
+      postgresql: 5432
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: "17.2.0-debian-12-r8"
+    pullPolicy: IfNotPresent
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+    allowExternalEgress: false
+    extraIngress:
+      - ports:
+          - port: 5432
+        from:
+          - podSelector:
+              matchLabels:
+                app: gis-lms-backend
+
+jaeger:
+  enabled: true
+  agent:
+    enabled: true
+  collector:
+    enabled: true
+  query:
+    enabled: true
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      host: "elasticsearch"
+      port: 9200
+      user: "elastic"
+      existingSecret: "jaeger-secret"
+      secretKeys:
+        passwordKey: "elasticsearch-password"
+
 app-template:
   global:
     fullnameOverride: gis-lms-backend
@@ -21,11 +81,22 @@ app-template:
             repository: ghcr.io/stephane-segning/gis-lessons-backend
             tag: latest
             pullPolicy: IfNotPresent
-
-          # -- ConfigMap to be loaded as environment variables
           envFrom:
             - configMapRef:
                 name: gis-lms-backend-config
+            - secretRef:
+                name: gis-lms-backend-secret
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: gis-lms-backend-secret
+                  key: db_url
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gis-lms-backend-secret
+                  key: db_password
 
   service:
     app:
@@ -67,8 +138,14 @@ app-template:
       annotations:
         description: "Configuration for the GIS LMS Backend application."
       data:
-        foo: bar
-        name: toto
+        DB_MAX_THREAD_POOL: "10"
+        HOST: "0.0.0.0"
+        PORT: "3000"
+        LOG_LEVEL: "debug"
+        OTLP_SPAN_ENDPOINT: "http://jaeger-collector:4317"
+        OTLP_METRIC_ENDPOINT: "http://jaeger-collector:4318/v1/metrics"
+        OTLP_SERVICE_NAME: "rust-app-example"
+        OTLP_VERSION: "0.1.0"
 
   networkpolicies:
     myNetworkPolicy:
@@ -76,6 +153,7 @@ app-template:
       controller: myController
       policyTypes:
         - Ingress
+        - Egress
       rules:
         ingress:
           - from:
@@ -85,3 +163,12 @@ app-template:
             ports:
               - protocol: TCP
                 port: 3000
+
+        egress:
+          - to:
+              - podSelector:
+                  matchLabels:
+                    app: postgres
+            ports:
+              - protocol: TCP
+                port: 5432
